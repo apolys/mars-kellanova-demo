@@ -56,7 +56,7 @@
 
   <div style="font-size:13px;font-weight:600;margin-bottom:10px;">고객사 프리셋 (선택 시 추천 미션 자동 체크)</div>
   <div class="ma-preset-row">
-    <div class="ma-preset selected" onclick="maApplyPreset(this,'harim')">하림</div>
+    <div class="ma-preset selected" onclick="maApplyPreset(this,'mars')">마즈&켈라노바</div>
     <div class="ma-preset" onclick="maApplyPreset(this,'cj')">CJ</div>
     <div class="ma-preset" onclick="maApplyPreset(this,'dongwon')">동원</div>
   </div>
@@ -77,16 +77,16 @@
   ];
 
   var maPresets = {
-    harim:['oos','pop','competitor'],
+    mars:['oos','pop','competitor'],
     cj:['promo','checklist'],
     dongwon:['order','note']
   };
 
   var maStores = [
-    { name:'이마트 해운대점', missions:['oos','competitor','pop'] },
-    { name:'롯데마트 창원점', missions:['promo','order'] },
-    { name:'이마트 울산점', missions:['checklist','note'] },
-    { name:'이마트 성수점', missions:[] }
+    { name:'GS25 홍대점', missions:['oos','competitor','pop'] },
+    { name:'홈플러스 안양점', missions:['promo','order'] },
+    { name:'이마트 죽전점', missions:['checklist','note'] },
+    { name:'CU 삼성점', missions:[] }
   ];
 
   var maOpenIdx = null;

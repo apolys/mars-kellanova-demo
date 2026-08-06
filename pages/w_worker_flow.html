@@ -299,20 +299,20 @@
 
 <script>
   var wfStores = [
-    { name:'이마트 해운대점', status:'pending', score:null, oos:null,
+    { name:'GS25 홍대점', status:'pending', score:null, oos:null,
       missions:[
         { key:'oos', label:'OOS 확인', icon:'📦', done:false },
         { key:'competitor', label:'경쟁사 조사', icon:'🔍', done:false },
         { key:'pop', label:'POP 확인', icon:'🏷️', done:false }
       ]
     },
-    { name:'롯데마트 창원점', status:'pending', score:null, oos:null,
+    { name:'홈플러스 안양점', status:'pending', score:null, oos:null,
       missions:[
         { key:'promo', label:'행사현황 조사', icon:'🎪', done:false },
         { key:'order', label:'발주 요청', icon:'📝', done:false }
       ]
     },
-    { name:'이마트 울산점', status:'pending', score:null, oos:null,
+    { name:'이마트 죽전점', status:'pending', score:null, oos:null,
       missions:[
         { key:'checklist', label:'체크리스트', icon:'✅', done:false },
         { key:'note', label:'특이사항 메모', icon:'💬', done:false }
@@ -323,7 +323,7 @@
   var wfMissionFieldTemplates = {
     oos: `
       <label class="wf-field-label">SKU 선택</label>
-      <select class="wf-select"><option>더미식 장인라면 얼큰한맛</option><option>The미식 육즙고기교자</option><option>더미식 현미쌀밥 180g</option></select>
+      <select class="wf-select"><option>Pringles 오리지널</option><option>Pringles 프렌치어니언</option><option>콘푸로스트 300g</option></select>
       <label class="wf-field-label">사진 첨부</label>
       <div class="wf-upload-box" onclick="this.classList.add('filled');this.textContent='✓ 사진 첨부됨'">📷 탭하여 사진 첨부</div>
       <label class="wf-field-label">사유</label>
@@ -364,7 +364,7 @@
     `,
     order: `
       <label class="wf-field-label">SKU</label>
-      <select class="wf-select"><option>더미식 장인라면 얼큰한맛</option><option>The미식 육즙고기교자</option></select>
+      <select class="wf-select"><option>Pringles 오리지널</option><option>Pringles 프렌치어니언</option></select>
       <label class="wf-field-label">현재 수량</label>
       <input class="wf-input" type="number" placeholder="예: 3">
       <label class="wf-field-label">권장 수량</label>
