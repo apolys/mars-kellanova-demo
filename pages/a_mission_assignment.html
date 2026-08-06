@@ -1,0 +1,188 @@
+<link rel="stylesheet" href="retail-ai.css">
+<style>
+  .ma-wrap{max-width:900px;margin:0 auto;padding:8px 0 24px}
+
+  .ma-preset-row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+  .ma-preset{
+    padding:10px 18px;border-radius:999px;background:var(--surface-2);color:var(--text-secondary);
+    font-size:13px;font-weight:600;cursor:pointer;border:2px solid transparent;transition:.15s;
+  }
+  .ma-preset.selected{border-color:var(--primary);background:var(--bg-accent);color:var(--text-accent)}
+  .ma-preset-hint{font-size:12px;color:var(--text-muted);margin-bottom:28px}
+
+  .ma-store-card{background:var(--surface-1);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:20px 22px;margin-bottom:14px}
+  .ma-store-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+  .ma-store-name{font-size:15px;font-weight:700}
+  .ma-store-meta{font-size:12px;color:var(--text-secondary);margin-top:3px}
+  .ma-store-count{font-size:12.5px;color:var(--text-accent);font-weight:700}
+  .ma-chevron{font-size:13px;color:var(--text-muted);margin-left:10px;transition:.15s}
+  .ma-chevron.open{transform:rotate(180deg)}
+
+  .ma-assigned-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+  .ma-assigned-chip{font-size:11.5px;padding:4px 10px;border-radius:999px;background:var(--bg-accent);color:var(--text-accent);font-weight:600}
+  .ma-assigned-chip.empty{background:var(--surface-2);color:var(--text-muted)}
+
+  .ma-editor{display:none;margin-top:18px;padding-top:18px;border-top:1px solid var(--border)}
+  .ma-editor.open{display:block}
+  .ma-mission-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:16px}
+  .ma-mission-toggle{
+    display:flex;align-items:center;gap:10px;background:var(--surface-2);border-radius:var(--radius);
+    padding:12px 14px;cursor:pointer;border:2px solid transparent;transition:.15s;
+  }
+  .ma-mission-toggle.on{border-color:var(--primary);background:var(--bg-accent)}
+  .ma-mission-toggle .icon{font-size:16px}
+  .ma-mission-toggle .label{flex:1;font-size:13px;font-weight:600;color:var(--text-secondary)}
+  .ma-mission-toggle.on .label{color:var(--text-accent)}
+  .ma-mission-toggle .box{
+    width:18px;height:18px;border-radius:5px;border:2px solid var(--border);flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;
+  }
+  .ma-mission-toggle.on .box{background:var(--primary);border-color:var(--primary)}
+
+  .ma-editor-actions{display:flex;justify-content:flex-end;gap:8px}
+  .ma-btn-ghost{background:none;box-shadow:none;color:var(--text-secondary);padding:10px 16px}
+  .ma-btn-ghost:hover{background:var(--surface-2);transform:none}
+
+  .ma-toast{
+    display:none;position:sticky;top:0;background:var(--bg-success);color:var(--text-success);
+    font-size:13px;font-weight:600;padding:10px 16px;border-radius:var(--radius);margin-bottom:20px;
+  }
+</style>
+
+<div class="ma-wrap">
+  <h2 class="screen-caption" style="margin-bottom:24px;">관리자용 오늘 미션 배정 화면 — SV/본사가 매장별로 오늘 수행할 추가 업무(미션)를 선택해서 내려주는 화면. 근무자 앱의 "오늘 미션"에 그대로 반영됩니다.</h2>
+
+  <div class="ma-toast" id="ma-toast">✓ 저장되었습니다. 근무자 앱에 즉시 반영됩니다.</div>
+
+  <div style="font-size:13px;font-weight:600;margin-bottom:10px;">고객사 프리셋 (선택 시 추천 미션 자동 체크)</div>
+  <div class="ma-preset-row">
+    <div class="ma-preset selected" onclick="maApplyPreset(this,'harim')">하림</div>
+    <div class="ma-preset" onclick="maApplyPreset(this,'cj')">CJ</div>
+    <div class="ma-preset" onclick="maApplyPreset(this,'dongwon')">동원</div>
+  </div>
+  <div class="ma-preset-hint">프리셋은 시작점일 뿐이며, 매장마다 개별적으로 다시 조정할 수 있습니다.</div>
+
+  <div id="ma-store-list"></div>
+</div>
+
+<script>
+  var maMissionCatalog = [
+    { key:'oos', label:'OOS 확인', icon:'📦' },
+    { key:'competitor', label:'경쟁사 조사', icon:'🔍' },
+    { key:'pop', label:'POP 확인', icon:'🏷️' },
+    { key:'promo', label:'행사현황 조사', icon:'🎪' },
+    { key:'order', label:'발주 요청', icon:'📝' },
+    { key:'checklist', label:'체크리스트', icon:'✅' },
+    { key:'note', label:'특이사항 메모', icon:'💬' }
+  ];
+
+  var maPresets = {
+    harim:['oos','pop','competitor'],
+    cj:['promo','checklist'],
+    dongwon:['order','note']
+  };
+
+  var maStores = [
+    { name:'이마트 해운대점', missions:['oos','competitor','pop'] },
+    { name:'롯데마트 창원점', missions:['promo','order'] },
+    { name:'이마트 울산점', missions:['checklist','note'] },
+    { name:'이마트 성수점', missions:[] }
+  ];
+
+  var maOpenIdx = null;
+
+  function maRenderStoreList(){
+    const wrap = document.getElementById('ma-store-list');
+    wrap.innerHTML = '';
+
+    maStores.forEach((store, idx) => {
+      const card = document.createElement('div');
+      card.className = 'ma-store-card';
+
+      const chipsHtml = store.missions.length
+        ? store.missions.map(k => `<span class="ma-assigned-chip">${maMissionCatalog.find(m=>m.key===k).icon} ${maMissionCatalog.find(m=>m.key===k).label}</span>`).join('')
+        : `<span class="ma-assigned-chip empty">배정된 미션 없음</span>`;
+
+      card.innerHTML = `
+        <div class="ma-store-head" onclick="maToggleEditor(${idx})">
+          <div>
+            <div class="ma-store-name">${store.name}</div>
+            <div class="ma-store-meta">담당 판촉사원 1명</div>
+          </div>
+          <div style="display:flex;align-items:center;">
+            <span class="ma-store-count">${store.missions.length}개 미션</span>
+            <span class="ma-chevron" id="ma-chevron-${idx}">▾</span>
+          </div>
+        </div>
+        <div class="ma-assigned-chips">${chipsHtml}</div>
+
+        <div class="ma-editor" id="ma-editor-${idx}">
+          <div class="ma-mission-grid" id="ma-grid-${idx}"></div>
+          <div class="ma-editor-actions">
+            <button class="ma-btn-ghost" onclick="maToggleEditor(${idx})">취소</button>
+            <button onclick="maSave(${idx})">저장</button>
+          </div>
+        </div>
+      `;
+      wrap.appendChild(card);
+    });
+  }
+
+  function maToggleEditor(idx){
+    const isOpening = maOpenIdx !== idx;
+    if(maOpenIdx !== null){
+      document.getElementById('ma-editor-' + maOpenIdx)?.classList.remove('open');
+      document.getElementById('ma-chevron-' + maOpenIdx)?.classList.remove('open');
+    }
+    maOpenIdx = isOpening ? idx : null;
+    if(isOpening){
+      document.getElementById('ma-editor-' + idx).classList.add('open');
+      document.getElementById('ma-chevron-' + idx).classList.add('open');
+      maRenderMissionGrid(idx);
+    }
+  }
+
+  function maRenderMissionGrid(idx){
+    const store = maStores[idx];
+    const grid = document.getElementById('ma-grid-' + idx);
+    grid.innerHTML = '';
+    maMissionCatalog.forEach(m => {
+      const on = store.missions.includes(m.key);
+      const el = document.createElement('div');
+      el.className = 'ma-mission-toggle' + (on ? ' on' : '');
+      el.innerHTML = `<span class="icon">${m.icon}</span><span class="label">${m.label}</span><span class="box">✓</span>`;
+      el.onclick = () => {
+        el.classList.toggle('on');
+      };
+      el.dataset.key = m.key;
+      grid.appendChild(el);
+    });
+  }
+
+  function maSave(idx){
+    const grid = document.getElementById('ma-grid-' + idx);
+    const selected = [...grid.querySelectorAll('.ma-mission-toggle.on')].map(el => el.dataset.key);
+    maStores[idx].missions = selected;
+    maToggleEditor(idx);
+    maRenderStoreList();
+    maShowToast();
+  }
+
+  function maApplyPreset(el, presetKey){
+    document.querySelectorAll('.ma-preset').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+    const recommended = maPresets[presetKey];
+    maStores.forEach(s => { s.missions = [...recommended]; });
+    maRenderStoreList();
+    maShowToast();
+  }
+
+  function maShowToast(){
+    const toast = document.getElementById('ma-toast');
+    toast.style.display = 'block';
+    clearTimeout(window._maToastTimer);
+    window._maToastTimer = setTimeout(() => { toast.style.display = 'none'; }, 2200);
+  }
+
+  maRenderStoreList();
+</script>

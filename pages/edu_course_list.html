@@ -1,0 +1,108 @@
+<link rel="stylesheet" href="../retail-ai.css">
+<h2 class="screen-caption">Course List — 브랜드/교육유형/진행상태로 필터링해 교육과정을 카드형으로 탐색하는 화면.</h2>
+
+<div style="max-width:920px; margin:0 auto;">
+
+  <div class="card" style="padding:14px 18px; margin-bottom:16px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;">
+    <select style="border:1px solid var(--border); border-radius:10px; padding:8px 10px; font-size:12.5px; color:var(--text-secondary);">
+      <option>전체 브랜드</option>
+      <option>더미식</option>
+      <option>용가리</option>
+      <option>자연실록</option>
+      <option>삼계탕</option>
+    </select>
+    <select style="border:1px solid var(--border); border-radius:10px; padding:8px 10px; font-size:12.5px; color:var(--text-secondary);">
+      <option>전체 교육유형</option>
+      <option>필수교육</option>
+      <option>제품교육</option>
+      <option>업무교육</option>
+      <option>안전교육</option>
+      <option>CS교육</option>
+      <option>행사교육</option>
+      <option>브랜드교육</option>
+    </select>
+    <select style="border:1px solid var(--border); border-radius:10px; padding:8px 10px; font-size:12.5px; color:var(--text-secondary);">
+      <option>전체 상태</option>
+      <option>완료</option>
+      <option>진행중</option>
+      <option>미수료</option>
+    </select>
+    <input type="text" placeholder="교육명 검색" style="flex:1; min-width:140px; border:1px solid var(--border); border-radius:10px; padding:8px 12px; font-size:12.5px;">
+  </div>
+
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px;">
+
+    <div class="card" style="overflow:hidden; cursor:pointer;" data-page="edu-course-detail">
+      <div style="height:100px; background:var(--bg-danger); display:flex; align-items:center; justify-content:center; font-size:28px;">🦺</div>
+      <div style="padding:14px;">
+        <span class="badge" style="background:var(--bg-danger); color:var(--text-danger); font-size:10.5px; margin-bottom:6px;">필수교육</span>
+        <div style="font-size:13.5px; font-weight:600; margin-top:8px;">복장 및 안전수칙</div>
+        <div style="font-size:11.5px; color:var(--text-muted); margin-top:4px;">15분 · 난이도 하</div>
+        <div style="height:6px; background:var(--surface-2); border-radius:999px; margin-top:10px; overflow:hidden;">
+          <div style="height:100%; width:0%; background:var(--fill-primary);"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="overflow:hidden; cursor:pointer;" data-page="edu-course-detail">
+      <div style="height:100px; background:var(--bg-accent); display:flex; align-items:center; justify-content:center; font-size:28px;">📦</div>
+      <div style="padding:14px;">
+        <span class="badge" style="background:var(--bg-accent); color:var(--text-accent); font-size:10.5px;">제품교육</span>
+        <div style="font-size:13.5px; font-weight:600; margin-top:8px;">더미식 신제품 매대 진열 가이드</div>
+        <div style="font-size:11.5px; color:var(--text-muted); margin-top:4px;">18분 · 난이도 중</div>
+        <div style="height:6px; background:var(--surface-2); border-radius:999px; margin-top:10px; overflow:hidden;">
+          <div style="height:100%; width:68%; background:var(--fill-primary);"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="overflow:hidden; cursor:pointer;" data-page="edu-course-detail">
+      <div style="height:100px; background:var(--bg-success); display:flex; align-items:center; justify-content:center; font-size:28px;">🐉</div>
+      <div style="padding:14px;">
+        <span class="badge" style="background:var(--bg-success); color:var(--text-success); font-size:10.5px;">NEW · 제품교육</span>
+        <div style="font-size:13.5px; font-weight:600; margin-top:8px;">용가리 행사 운영법</div>
+        <div style="font-size:11.5px; color:var(--text-muted); margin-top:4px;">12분 · 난이도 하</div>
+        <div style="height:6px; background:var(--surface-2); border-radius:999px; margin-top:10px; overflow:hidden;">
+          <div style="height:100%; width:0%; background:var(--fill-primary);"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="overflow:hidden; cursor:pointer;" data-page="edu-course-detail">
+      <div style="height:100px; background:var(--bg-success); display:flex; align-items:center; justify-content:center; font-size:28px;">🌿</div>
+      <div style="padding:14px;">
+        <span class="badge" style="background:var(--bg-success); color:var(--text-success); font-size:10.5px;">NEW · 제품교육</span>
+        <div style="font-size:13.5px; font-weight:600; margin-top:8px;">자연실록 제품 소개</div>
+        <div style="font-size:11.5px; color:var(--text-muted); margin-top:4px;">10분 · 난이도 하</div>
+        <div style="height:6px; background:var(--surface-2); border-radius:999px; margin-top:10px; overflow:hidden;">
+          <div style="height:100%; width:0%; background:var(--fill-primary);"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="overflow:hidden; cursor:pointer;" data-page="edu-course-detail">
+      <div style="height:100px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-size:28px;">🍲</div>
+      <div style="padding:14px;">
+        <span class="badge" style="background:var(--bg-accent); color:var(--text-accent); font-size:10.5px;">제품교육</span>
+        <div style="font-size:13.5px; font-weight:600; margin-top:8px;">삼계탕 라인업 소개</div>
+        <div style="font-size:11.5px; color:var(--text-muted); margin-top:4px;">14분 · 난이도 중</div>
+        <div style="height:6px; background:var(--surface-2); border-radius:999px; margin-top:10px; overflow:hidden;">
+          <div style="height:100%; width:100%; background:var(--text-success);"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="overflow:hidden; cursor:pointer;" data-page="edu-course-detail">
+      <div style="height:100px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-size:28px;">🗣️</div>
+      <div style="padding:14px;">
+        <span class="badge" style="background:var(--surface-3); color:var(--text-secondary); font-size:10.5px;">CS교육</span>
+        <div style="font-size:13.5px; font-weight:600; margin-top:8px;">고객응대 매뉴얼</div>
+        <div style="font-size:11.5px; color:var(--text-muted); margin-top:4px;">20분 · 난이도 중</div>
+        <div style="height:6px; background:var(--surface-2); border-radius:999px; margin-top:10px; overflow:hidden;">
+          <div style="height:100%; width:30%; background:var(--fill-primary);"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

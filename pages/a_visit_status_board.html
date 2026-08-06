@@ -1,0 +1,187 @@
+<link rel="stylesheet" href="retail-ai.css">
+<style>
+  .vb-wrap{max-width:960px;margin:0 auto;padding:8px 0 24px}
+
+  .vb-filter-bar{
+    display:grid;grid-template-columns:1fr 1fr auto;gap:10px;
+    background:var(--surface-2);border-radius:var(--radius);padding:16px;margin-bottom:24px;align-items:end;
+  }
+  .vb-filter-item label{display:block;font-size:11.5px;color:var(--text-secondary);font-weight:600;margin-bottom:6px}
+  .vb-filter-item select{
+    width:100%;border:1px solid var(--border);border-radius:8px;padding:9px 10px;font-size:12.5px;
+    font-family:inherit;background:var(--surface-1);color:var(--text-primary);
+  }
+  .vb-search-btn{padding:9px 20px;font-size:13px;white-space:nowrap}
+  @media (max-width:640px){ .vb-filter-bar{grid-template-columns:1fr 1fr} .vb-search-btn{grid-column:span 2} }
+
+  .vb-kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:28px}
+  .vb-kpi-card{background:var(--surface-2);border-radius:var(--radius);padding:16px 18px}
+  .vb-kpi-card .label{font-size:12px;color:var(--text-secondary)}
+  .vb-kpi-card .value{font-size:24px;font-weight:700;margin-top:6px}
+
+  .vb-worker-card{background:var(--surface-1);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:20px 22px;margin-bottom:14px}
+  .vb-worker-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+  .vb-worker-name{font-size:15px;font-weight:700}
+  .vb-worker-meta{font-size:12px;color:var(--text-secondary);margin-top:3px}
+  .vb-status-badge{font-size:11.5px;padding:4px 10px;border-radius:999px;font-weight:600}
+  .vb-status-badge.working{background:var(--bg-warning);color:var(--text-warning)}
+  .vb-status-badge.offduty{background:var(--bg-success);color:var(--text-success)}
+  .vb-status-badge.absent{background:var(--surface-2);color:var(--text-muted);border:1px solid var(--border)}
+
+  .vb-store-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .vb-store-chip{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:6px 12px;border-radius:999px}
+  .vb-store-chip.done{background:var(--bg-success);color:var(--text-success)}
+  .vb-store-chip.inprogress{background:var(--bg-warning);color:var(--text-warning)}
+  .vb-store-chip.pending{background:var(--surface-2);color:var(--text-muted);border:1px solid var(--border)}
+
+  .vb-stat-row{display:flex;gap:24px;flex-wrap:wrap;padding-top:14px;border-top:1px solid var(--border)}
+  .vb-stat{font-size:12.5px;color:var(--text-secondary)}
+  .vb-stat b{color:var(--text-primary);font-size:14px;margin-left:4px}
+  .vb-stat b.danger{color:var(--text-danger)}
+
+  .vb-detail-btn{margin-left:auto;background:none;box-shadow:none;color:var(--text-accent);font-size:12.5px;padding:8px 4px}
+  .vb-detail-btn:hover{background:none;transform:none;text-decoration:underline}
+
+  .vb-empty{text-align:center;color:var(--text-muted);font-size:13px;padding:60px 0}
+</style>
+
+<div class="vb-wrap">
+  <h2 class="screen-caption" style="margin-bottom:24px;">오늘 방문 현황판 — SV가 여러 판촉사원의 출근·방문 진행·오늘 미션 수행 현황을 한 화면에서 확인하는 통합 뷰입니다.</h2>
+
+  <div class="vb-filter-bar">
+    <div class="vb-filter-item">
+      <label>담당자</label>
+      <select id="vb-f-worker" onchange="vbApplyFilter()">
+        <option value="all">전체</option>
+        <option value="박〇〇">박〇〇</option>
+        <option value="이〇〇">이〇〇</option>
+        <option value="최〇〇">최〇〇</option>
+      </select>
+    </div>
+    <div class="vb-filter-item">
+      <label>상태</label>
+      <select id="vb-f-status" onchange="vbApplyFilter()">
+        <option value="all">전체</option>
+        <option value="working">근무중</option>
+        <option value="offduty">퇴근완료</option>
+        <option value="absent">미출근</option>
+      </select>
+    </div>
+    <button class="vb-search-btn" onclick="vbApplyFilter()">검색</button>
+  </div>
+
+  <div class="vb-kpi-grid" id="vb-kpi-grid"></div>
+
+  <div id="vb-worker-list"></div>
+</div>
+
+<script>
+  var vbWorkers = [
+    { name:'박〇〇', checkin:'08:55', status:'working',
+      stores:[
+        { name:'이마트 해운대점', status:'done', score:82, oos:2, missionDone:3, missionTotal:3 },
+        { name:'롯데마트 부산점', status:'inprogress', score:null, oos:null, missionDone:0, missionTotal:2 }
+      ]
+    },
+    { name:'이〇〇', checkin:'09:02', status:'working',
+      stores:[
+        { name:'롯데마트 창원점', status:'done', score:79, oos:1, missionDone:2, missionTotal:2 },
+        { name:'이마트 김해점', status:'pending', score:null, oos:null, missionDone:0, missionTotal:1 }
+      ]
+    },
+    { name:'최〇〇', checkin:'08:48', status:'offduty',
+      stores:[
+        { name:'이마트 울산점', status:'done', score:85, oos:0, missionDone:1, missionTotal:2 },
+        { name:'롯데마트 진주점', status:'done', score:88, oos:1, missionDone:2, missionTotal:2 }
+      ]
+    }
+  ];
+
+  var vbStatusMeta = {
+    working:{label:'근무중', cls:'working'},
+    offduty:{label:'퇴근완료', cls:'offduty'},
+    absent:{label:'미출근', cls:'absent'}
+  };
+  var vbStoreStatusMeta = {
+    done:{label:'✓', cls:'done'},
+    inprogress:{label:'🕓', cls:'inprogress'},
+    pending:{label:'⚪', cls:'pending'}
+  };
+
+  function vbApplyFilter(){
+    const worker = document.getElementById('vb-f-worker').value;
+    const status = document.getElementById('vb-f-status').value;
+    const filtered = vbWorkers.filter(w =>
+      (worker === 'all' || w.name === worker) &&
+      (status === 'all' || w.status === status)
+    );
+    vbRender(filtered);
+  }
+
+  function vbRenderKpi(workers){
+    const total = vbWorkers.length;
+    const checkedIn = vbWorkers.filter(w => w.status !== 'absent').length;
+
+    const allStores = vbWorkers.flatMap(w => w.stores);
+    const doneStores = allStores.filter(s => s.status === 'done');
+    const avgScore = doneStores.length ? Math.round(doneStores.reduce((a,s)=>a+s.score,0)/doneStores.length) : 0;
+    const totalOos = doneStores.reduce((a,s)=>a+(s.oos||0),0);
+    const missionDone = allStores.reduce((a,s)=>a+s.missionDone,0);
+    const missionTotal = allStores.reduce((a,s)=>a+s.missionTotal,0);
+
+    document.getElementById('vb-kpi-grid').innerHTML = `
+      <div class="vb-kpi-card"><div class="label">출근 인원</div><div class="value">${checkedIn}/${total}</div></div>
+      <div class="vb-kpi-card"><div class="label">방문 완료 매장</div><div class="value">${doneStores.length}/${allStores.length}</div></div>
+      <div class="vb-kpi-card"><div class="label">평균 Perfect Store</div><div class="value">${avgScore}점</div></div>
+      <div class="vb-kpi-card"><div class="label">총 OOS</div><div class="value" style="color:var(--text-danger)">${totalOos}건</div></div>
+      <div class="vb-kpi-card"><div class="label">오늘 미션 수행</div><div class="value">${missionDone}/${missionTotal}</div></div>
+    `;
+  }
+
+  function vbRender(workers){
+    vbRenderKpi();
+    const listEl = document.getElementById('vb-worker-list');
+    listEl.innerHTML = '';
+
+    if(workers.length === 0){
+      listEl.innerHTML = '<div class="vb-empty">조건에 맞는 담당자가 없습니다.</div>';
+      return;
+    }
+
+    workers.forEach(w => {
+      const doneStores = w.stores.filter(s => s.status === 'done');
+      const avgScore = doneStores.length ? Math.round(doneStores.reduce((a,s)=>a+s.score,0)/doneStores.length) : null;
+      const totalOos = doneStores.reduce((a,s)=>a+(s.oos||0),0);
+      const missionDone = w.stores.reduce((a,s)=>a+s.missionDone,0);
+      const missionTotal = w.stores.reduce((a,s)=>a+s.missionTotal,0);
+      const meta = vbStatusMeta[w.status];
+
+      const chipsHtml = w.stores.map(s => {
+        const sm = vbStoreStatusMeta[s.status];
+        return `<span class="vb-store-chip ${sm.cls}">${sm.label} ${s.name}</span>`;
+      }).join('');
+
+      const card = document.createElement('div');
+      card.className = 'vb-worker-card';
+      card.innerHTML = `
+        <div class="vb-worker-head">
+          <div>
+            <div class="vb-worker-name">${w.name}</div>
+            <div class="vb-worker-meta">출근 ${w.checkin} · 방문 ${doneStores.length}/${w.stores.length}곳</div>
+          </div>
+          <span class="vb-status-badge ${meta.cls}">${meta.label}</span>
+        </div>
+        <div class="vb-store-chips">${chipsHtml}</div>
+        <div class="vb-stat-row">
+          <span class="vb-stat">평균 Perfect Store<b>${avgScore !== null ? avgScore + '점' : '-'}</b></span>
+          <span class="vb-stat">OOS<b class="${totalOos > 0 ? 'danger' : ''}">${totalOos}건</b></span>
+          <span class="vb-stat">오늘 미션<b>${missionDone}/${missionTotal}</b></span>
+          <button class="vb-detail-btn" data-page="mission-results">상세 결과 보기 →</button>
+        </div>
+      `;
+      listEl.appendChild(card);
+    });
+  }
+
+  vbRender(vbWorkers);
+</script>

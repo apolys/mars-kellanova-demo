@@ -1,0 +1,178 @@
+<link rel="stylesheet" href="../retail-ai.css">
+<h2 class="screen-caption">M1 AI 스낵존 스코어링 — 판촉사원 모바일 촬영 결과 화면. 사진 촬영부터 AI 분석 → OCR 인식 → SKU/가격 매칭 → Execution Score → AI Summary까지 실제 서비스 흐름 그대로 클릭해서 확인할 수 있다.</h2>
+
+<div id="m1Root" style="max-width:320px; margin:0 auto; background:var(--surface-1); border-radius:20px; padding:12px;">
+
+  <!-- 진행 상태 점 -->
+  <div style="display:flex; gap:6px; justify-content:center; margin-bottom:10px;">
+    <span class="m1-dot" data-dot="1" style="width:6px; height:6px; border-radius:50%; background:var(--fill-primary);"></span>
+    <span class="m1-dot" data-dot="2" style="width:6px; height:6px; border-radius:50%; background:var(--border);"></span>
+    <span class="m1-dot" data-dot="3" style="width:6px; height:6px; border-radius:50%; background:var(--border);"></span>
+    <span class="m1-dot" data-dot="4" style="width:6px; height:6px; border-radius:50%; background:var(--border);"></span>
+    <span class="m1-dot" data-dot="5" style="width:6px; height:6px; border-radius:50%; background:var(--border);"></span>
+    <span class="m1-dot" data-dot="6" style="width:6px; height:6px; border-radius:50%; background:var(--border);"></span>
+  </div>
+
+  <!-- STEP 1: 사진 촬영/업로드 -->
+  <div class="m1-step" data-step="1">
+    <div style="font-size:13px; font-weight:500; margin-bottom:8px; padding:0 4px;">촬영 완료 · GS25 강남점 스낵 매대</div>
+    <div style="position:relative; border-radius:12px; overflow:hidden;">
+      <div style="width:100%; aspect-ratio:4/3; background:var(--surface-2); border:2px dashed var(--border); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:12px; text-align:center; padding:12px; line-height:1.6;">📷 촬영 예정<br>GS25 강남점 Pringles 스낵 매대</div>
+    </div>
+    <div style="font-size:12px; color:var(--text-secondary); margin:10px 4px 0;">사진 1장이 업로드되었습니다. AI가 SKU·가격표·POP을 자동으로 인식합니다.</div>
+    <button onclick="m1GoProcessing()" style="width:100%; margin-top:14px; background:var(--fill-primary); color:var(--on-primary); border:none; border-radius:var(--radius); padding:12px; font-size:14px;">AI 분석 시작</button>
+  </div>
+
+  <!-- STEP 2: AI Processing -->
+  <div class="m1-step" data-step="2" style="display:none;">
+    <div style="font-size:13px; font-weight:500; margin-bottom:14px; padding:0 4px;">AI Processing...</div>
+    <div style="display:flex; flex-direction:column; gap:12px; padding:8px 4px;">
+      <div class="m1-chk" data-chk="1" style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-muted);"><span class="m1-chk-icon" style="width:16px;">○</span>이미지 보정</div>
+      <div class="m1-chk" data-chk="2" style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-muted);"><span class="m1-chk-icon" style="width:16px;">○</span>OCR 분석</div>
+      <div class="m1-chk" data-chk="3" style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-muted);"><span class="m1-chk-icon" style="width:16px;">○</span>SKU Matching</div>
+      <div class="m1-chk" data-chk="4" style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-muted);"><span class="m1-chk-icon" style="width:16px;">○</span>POP 인식</div>
+      <div class="m1-chk" data-chk="5" style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-muted);"><span class="m1-chk-icon" style="width:16px;">○</span>Execution Scoring</div>
+    </div>
+  </div>
+
+  <!-- STEP 3: OCR 결과 -->
+  <div class="m1-step" data-step="3" style="display:none;">
+    <div style="font-size:13px; font-weight:500; margin-bottom:8px; padding:0 4px;">OCR 인식 결과</div>
+    <div style="position:relative; border-radius:12px; overflow:hidden;">
+      <div style="width:100%; aspect-ratio:4/3; background:var(--surface-2); border:2px dashed var(--border); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:12px; text-align:center; padding:12px;">📷 촬영 예정 (OCR 분석용 원본 사진)</div>
+      <svg viewBox="0 0 900 675" style="position:absolute; top:0; left:0; width:100%; height:100%;">
+        <rect x="0" y="390" width="160" height="230" rx="6" fill="none" stroke="#639922" stroke-width="2.5"/>
+        <rect x="160" y="390" width="160" height="230" rx="6" fill="none" stroke="#BA7517" stroke-width="2.5" stroke-dasharray="5 3"/>
+        <rect x="160" y="360" width="160" height="26" rx="4" fill="#BA7517"/>
+        <text x="240" y="378" text-anchor="middle" font-size="13" fill="#fff" font-weight="600">Facing 부족</text>
+        <rect x="320" y="390" width="230" height="230" rx="6" fill="none" stroke="#3D6FD8" stroke-width="2.5" stroke-dasharray="4 3"/>
+        <rect x="320" y="360" width="230" height="26" rx="4" fill="#3D6FD8"/>
+        <text x="435" y="378" text-anchor="middle" font-size="13" fill="#fff" font-weight="600">가격표 일부 가림 82%</text>
+        <rect x="550" y="390" width="170" height="230" rx="6" fill="none" stroke="#639922" stroke-width="2.5"/>
+        <rect x="720" y="390" width="180" height="230" rx="6" fill="none" stroke="#98A2B3" stroke-width="2" stroke-dasharray="2 2"/>
+        <rect x="720" y="360" width="180" height="26" rx="4" fill="#98A2B3"/>
+        <text x="810" y="378" text-anchor="middle" font-size="13" fill="#fff" font-weight="600">경쟁사(포카칩)</text>
+      </svg>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:10px; padding:0 4px;">
+      <div style="flex:1; font-size:11px;">
+        <div style="color:var(--text-muted); margin-bottom:4px;">SKU</div>
+        <div>Pringles 오리지널</div>
+        <div>Pringles 사워크림&어니언</div>
+        <div>Pringles 핫&스파이시</div>
+        <div>Pringles 프렌치어니언</div>
+      </div>
+      <div style="flex:1; font-size:11px; border-left:1px solid var(--border); padding-left:8px;">
+        <div style="color:var(--text-muted); margin-bottom:4px;">가격표</div>
+        <div>3,480원</div>
+        <div>3,480원</div>
+        <div>3,480원</div>
+        <div>3,680원</div>
+      </div>
+      <div style="flex:1; font-size:11px; border-left:1px solid var(--border); padding-left:8px;">
+        <div style="color:var(--text-muted); margin-bottom:4px;">POP</div>
+        <div>정상</div>
+        <div style="color:var(--text-danger);">미부착</div>
+        <div>정상</div>
+        <div>정상</div>
+      </div>
+    </div>
+    <button onclick="m1ShowStep(4)" style="width:100%; margin-top:14px; background:var(--fill-primary); color:var(--on-primary); border:none; border-radius:var(--radius); padding:12px; font-size:14px;">다음 · 분석 결과 보기</button>
+  </div>
+
+  <!-- STEP 4: AI 분석 결과 -->
+  <div class="m1-step" data-step="4" style="display:none;">
+    <div style="font-size:13px; font-weight:500; margin-bottom:10px; padding:0 4px;">AI 분석 결과</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:0 4px;">
+      <div style="background:var(--surface-2); border-radius:10px; padding:10px;">
+        <div style="font-size:11px; color:var(--text-muted);">SKU Matching</div>
+        <div style="font-size:20px; font-weight:500; color:var(--text-success);">100%</div>
+      </div>
+      <div style="background:var(--surface-2); border-radius:10px; padding:10px;">
+        <div style="font-size:11px; color:var(--text-muted);">가격표 일치</div>
+        <div style="font-size:20px; font-weight:500; color:var(--text-success);">95%</div>
+      </div>
+      <div style="background:var(--surface-2); border-radius:10px; padding:10px;">
+        <div style="font-size:11px; color:var(--text-muted);">POP 인식</div>
+        <div style="font-size:16px; font-weight:500; color:var(--text-warning);">1건 미부착</div>
+      </div>
+      <div style="background:var(--surface-2); border-radius:10px; padding:10px;">
+        <div style="font-size:11px; color:var(--text-muted);">Face Count</div>
+        <div style="font-size:20px; font-weight:500;">2~4</div>
+      </div>
+      <div style="background:var(--surface-2); border-radius:10px; padding:10px; grid-column:1 / span 2;">
+        <div style="font-size:11px; color:var(--text-muted);">진열 품질</div>
+        <div style="font-size:16px; font-weight:500; color:var(--text-warning);">양호 (사워크림&어니언 Facing 2개, 기준 4개 미달)</div>
+      </div>
+    </div>
+    <button onclick="m1ShowStep(5)" style="width:100%; margin-top:14px; background:var(--fill-primary); color:var(--on-primary); border:none; border-radius:var(--radius); padding:12px; font-size:14px;">다음 · Execution Score 보기</button>
+  </div>
+
+  <!-- STEP 5: Shelf Score -->
+  <div class="m1-step" data-step="5" style="display:none;">
+    <div style="text-align:center; padding:10px 4px 4px;">
+      <div style="font-size:13px; color:var(--text-secondary);">Execution Score</div>
+      <div style="font-size:40px; font-weight:600; color:var(--text-success); line-height:1.2;">90점</div>
+      <div style="display:inline-block; background:rgba(99,153,34,0.12); color:#639922; font-size:12px; font-weight:600; padding:3px 10px; border-radius:999px; margin-top:2px;">GOOD</div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px; padding:14px 4px 0;">
+      <div style="display:flex; justify-content:space-between; font-size:12px;"><span>SKU</span><span style="color:var(--text-success);">100 / 100</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:12px;"><span>가격표</span><span style="color:var(--text-success);">95 / 100</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:12px;"><span>POP</span><span style="color:var(--text-warning);">80 / 100</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:12px;"><span>진열(Facing)</span><span style="color:var(--text-warning);">85 / 100</span></div>
+    </div>
+    <button onclick="m1ShowStep(6)" style="width:100%; margin-top:14px; background:var(--fill-primary); color:var(--on-primary); border:none; border-radius:var(--radius); padding:12px; font-size:14px;">다음 · AI Summary 보기</button>
+  </div>
+
+  <!-- STEP 6: AI Summary -->
+  <div class="m1-step" data-step="6" style="display:none;">
+    <div style="font-size:13px; font-weight:500; margin-bottom:10px; padding:0 4px;">AI Summary</div>
+    <div style="display:flex; flex-direction:column; gap:8px; padding:0 4px; font-size:13px;">
+      <div>✓ Pringles 3종(오리지널·사워크림&어니언·핫&스파이시) 정상 인식</div>
+      <div>✓ Pringles 프렌치어니언 정상 인식</div>
+      <div style="color:var(--text-warning);">⚠ Pringles 사워크림&어니언 POP 미부착 · Facing 부족(2개, 기준 4개)</div>
+      <div style="color:var(--text-warning);">⚠ Pringles 핫&스파이시 가격표 일부 가림 — 재촬영 권장 (인식률 82%)</div>
+    </div>
+    <button style="width:100%; margin-top:14px; background:var(--fill-primary); color:var(--on-primary); border:none; border-radius:var(--radius); padding:12px; font-size:14px;">진열 보강 요청 보내기</button>
+    <button data-page="ai-detail" style="width:100%; margin-top:8px; background:var(--surface-2); color:var(--text-accent); border:1px solid var(--border); border-radius:var(--radius); padding:12px; font-size:13px; font-weight:600; box-shadow:none;">🔍 AI 상세 결과 보기</button>
+    <button onclick="m1ShowStep(1)" style="width:100%; margin-top:8px; background:none; color:var(--text-muted); border:none; padding:8px; font-size:12px; box-shadow:none;">처음부터 다시 보기</button>
+  </div>
+
+</div>
+
+<script>
+var m1TotalSteps = 6;
+
+function m1ShowStep(n) {
+  var root = document.getElementById('m1Root');
+  if (!root) return;
+  var steps = root.querySelectorAll('.m1-step');
+  for (var i = 0; i < steps.length; i++) {
+    steps[i].style.display = (parseInt(steps[i].getAttribute('data-step'), 10) === n) ? '' : 'none';
+  }
+  var dots = root.querySelectorAll('.m1-dot');
+  for (var j = 0; j < dots.length; j++) {
+    var isActive = parseInt(dots[j].getAttribute('data-dot'), 10) === n;
+    dots[j].style.background = isActive ? 'var(--fill-primary)' : 'var(--border)';
+  }
+}
+
+function m1GoProcessing() {
+  m1ShowStep(2);
+  var root = document.getElementById('m1Root');
+  if (!root) return;
+  var delays = [300, 700, 1150, 1600, 2050];
+  for (var i = 0; i < delays.length; i++) {
+    (function (idx) {
+      setTimeout(function () {
+        var chk = root.querySelector('.m1-chk[data-chk="' + (idx + 1) + '"]');
+        if (!chk) return;
+        chk.style.color = 'var(--text-success)';
+        var icon = chk.querySelector('.m1-chk-icon');
+        if (icon) icon.textContent = '✓';
+      }, delays[idx]);
+    })(i);
+  }
+  setTimeout(function () { m1ShowStep(3); }, 2600);
+}
+</script>

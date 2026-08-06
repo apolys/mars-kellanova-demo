@@ -1,0 +1,78 @@
+<link rel="stylesheet" href="../retail-ai.css">
+<h2 class="screen-caption">M6 고객 Nudge — 확장 기능 미리보기(Concept Preview). M1~M7은 매대 사진 한 장으로 지금 바로 동작하지만, M6는 POS·멤버십·CRM 데이터가 연동되어야 실제로 동작한다. "연동되면 이런 화면이 가능하다"는 컨셉을 보여주는 화면이며, 실제 고객 데이터가 없는 상태의 예시(mock)임을 화면에서 명확히 표시한다.</h2>
+
+<div style="max-width:340px; margin:0 auto;">
+
+  <div style="background:var(--surface-2); border:1.5px dashed var(--border); border-radius:12px; padding:12px 14px; margin-bottom:12px;">
+    <div style="font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:4px;">🔮 확장 기능 미리보기 (Concept Preview)</div>
+    <div style="font-size:11.5px; color:var(--text-muted); line-height:1.5;">M1~M7은 매대 사진 한 장으로 지금 바로 동작합니다. M6는 <strong style="color:var(--text-secondary);">POS · 멤버십 · CRM 데이터가 연동되면</strong> 아래와 같은 화면으로 동작할 예정입니다. 지금 보시는 고객 정보는 실제 데이터가 아닌 예시입니다.</div>
+  </div>
+
+  <div style="background:var(--surface-2); border:0.5px solid var(--border); border-radius:12px; padding:16px; opacity:0.96;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+      <div style="width:40px; height:40px; border-radius:50%; background:var(--bg-accent); display:flex; align-items:center; justify-content:center; font-weight:500; font-size:13px; color:var(--text-accent);">김*</div>
+      <div>
+        <div style="font-size:13px; font-weight:500;">멤버십 고객 인식됨 <span style="font-size:10.5px; color:var(--text-muted); font-weight:400;">(예시 데이터)</span></div>
+        <div style="font-size:12px; color:var(--text-muted);">최근 30일 미구매 · 롯데마트 의왕점 단골</div>
+      </div>
+    </div>
+    <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">고객 프로필</div>
+    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px;">
+      <span style="background:var(--surface-1); color:var(--text-secondary); font-size:11px; padding:4px 9px; border-radius:999px;">30대</span>
+      <span style="background:var(--surface-1); color:var(--text-secondary); font-size:11px; padding:4px 9px; border-radius:999px;">1인 가구</span>
+      <span style="background:var(--surface-1); color:var(--text-secondary); font-size:11px; padding:4px 9px; border-radius:999px;">더미식 선호 고객</span>
+    </div>
+    <div style="border-top:0.5px solid var(--border); padding-top:12px; margin-bottom:12px;">
+      <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">최근 구매 이력 (POS 연동 시 자동 수집)</div>
+      <div style="font-size:13px;">더미식 장인라면 얼큰한맛 · The미식 오징어라면</div>
+    </div>
+    <div style="background:var(--bg-accent); border-radius:var(--radius); padding:12px;">
+      <div style="font-size:12px; color:var(--text-accent); margin-bottom:4px;">추천 제안 (AI Recommendation)</div>
+      <div style="font-size:13px; font-weight:500; color:var(--text-accent); margin-bottom:8px;">장인라면 담백한맛 15% 쿠폰 제안</div>
+      <div style="font-size:12px; color:var(--text-accent); opacity:0.85; margin-bottom:4px;">추천 이유: 라면류 반복 구매 + 1인가구 간편식 선호 패턴</div>
+      <div style="font-size:12px; color:var(--text-accent); opacity:0.85;">구매 확률: <strong>68%</strong> (예시)</div>
+    </div>
+    <button disabled style="width:100%; margin-top:12px; background:var(--surface-3); color:var(--text-muted); border:none; border-radius:var(--radius); padding:10px; font-size:13px; box-shadow:none; cursor:not-allowed;">쿠폰 발급 (연동 후 활성화)</button>
+
+    <div style="border-top:0.5px solid var(--border); padding-top:12px; margin-top:16px; margin-bottom:12px;">
+      <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">Bundle Recommendation · 함께 구매 추천</div>
+      <div style="font-size:13px;">장인라면 담백한맛 + 더미식 사골곰탕 300g</div>
+      <div style="font-size:11.5px; color:var(--text-muted); margin-top:4px;">1인가구 고객의 82%가 국물요리와 함께 구매 (예시)</div>
+    </div>
+
+    <div style="border-top:0.5px solid var(--border); padding-top:12px; margin-bottom:12px;">
+      <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">Promotion / Nudge</div>
+      <div style="display:flex; flex-direction:column; gap:6px; font-size:13px;">
+        <div>🏷 오늘 할인 15%</div>
+        <div>📱 멤버십 APP 쿠폰 발급 가능</div>
+        <div>📣 상온 매대 신제품 행사 POP 진행 중</div>
+      </div>
+    </div>
+
+    <div style="background:var(--surface-1); border-radius:var(--radius); padding:12px; margin-bottom:12px;">
+      <div style="font-size:12px; font-weight:600; margin-bottom:8px;">AI Summary (예시)</div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span style="color:var(--text-muted);">예상 구매 전환율</span><span>68%</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span style="color:var(--text-muted);">예상 객단가 증가</span><span>+3,200원</span></div>
+      <div style="display:flex; justify-content:space-between; font-size:12px;"><span style="color:var(--text-muted);">추천 성공 가능성</span><span style="color:var(--text-success);">높음</span></div>
+    </div>
+
+    <div>
+      <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">Store Action</div>
+      <div style="display:flex; flex-direction:column; gap:6px; font-size:13px;">
+        <div>· 추천상품 시식 제안</div>
+        <div>· 행사 POP 위치 안내</div>
+        <div>· 엔드매대 진열 유도</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--bg-accent); border-radius:var(--radius); padding:14px 16px; margin-top:12px;">
+    <div style="font-size:12px; font-weight:600; color:var(--text-accent); margin-bottom:6px;">연동에 필요한 것</div>
+    <div style="display:flex; flex-direction:column; gap:4px; font-size:12px; color:var(--text-accent);">
+      <div>· POS — 실시간 구매 이력</div>
+      <div>· 멤버십 시스템 — 고객 식별·프로필</div>
+      <div>· CRM — 쿠폰 발급·캠페인 이력 연동</div>
+    </div>
+  </div>
+
+</div>

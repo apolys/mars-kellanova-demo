@@ -1,0 +1,199 @@
+<link rel="stylesheet" href="retail-ai.css">
+<style>
+  .mr-wrap{max-width:960px;margin:0 auto;padding:8px 0 24px}
+
+  /* 검색/필터 바 */
+  .mr-filter-bar{
+    display:grid;grid-template-columns:repeat(4,1fr) auto;gap:10px;
+    background:var(--surface-2);border-radius:var(--radius);padding:16px;margin-bottom:28px;align-items:end;
+  }
+  .mr-filter-item label{display:block;font-size:11.5px;color:var(--text-secondary);font-weight:600;margin-bottom:6px}
+  .mr-filter-item select, .mr-filter-item input{
+    width:100%;border:1px solid var(--border);border-radius:8px;padding:9px 10px;font-size:12.5px;
+    font-family:inherit;background:var(--surface-1);color:var(--text-primary);
+  }
+  .mr-search-btn{padding:9px 20px;font-size:13px;white-space:nowrap}
+  @media (max-width:760px){
+    .mr-filter-bar{grid-template-columns:repeat(2,1fr)}
+    .mr-search-btn{grid-column:span 2}
+  }
+
+  .mr-summary-bar{display:flex;gap:20px;font-size:12.5px;color:var(--text-secondary);margin-bottom:20px;flex-wrap:wrap}
+  .mr-summary-bar b{color:var(--text-primary)}
+
+  .mr-store-card{background:var(--surface-1);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:20px 22px;margin-bottom:14px}
+  .mr-store-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+  .mr-store-name{font-size:15px;font-weight:700}
+  .mr-store-meta{font-size:12px;color:var(--text-secondary);margin-top:3px}
+  .mr-store-badge{font-size:11.5px;padding:4px 10px;border-radius:999px;font-weight:600;background:var(--bg-success);color:var(--text-success)}
+
+  .mr-log-row{display:flex;gap:12px;padding:14px 0;border-top:1px solid var(--border)}
+  .mr-log-row:first-of-type{border-top:none}
+  .mr-log-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+  .mr-log-body{flex:1}
+  .mr-log-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .mr-log-label{font-size:13.5px;font-weight:700}
+  .mr-log-time{font-size:11.5px;color:var(--text-muted)}
+  .mr-log-detail{font-size:12.5px;color:var(--text-secondary);line-height:1.7}
+  .mr-log-detail .k{color:var(--text-muted)}
+  .mr-photo-chip{display:inline-flex;align-items:center;gap:4px;font-size:11px;background:var(--bg-accent);color:var(--text-accent);padding:3px 8px;border-radius:6px;margin-top:6px}
+
+  .mr-empty{text-align:center;color:var(--text-muted);font-size:13px;padding:60px 0}
+</style>
+
+<div class="mr-wrap">
+  <h2 class="screen-caption" style="margin-bottom:24px;">오늘 미션 결과 — 근무자가 제출한 오늘 미션 데이터를 매장별로 확인하는 화면. 관리자 미션 배정 화면과 짝을 이룹니다.</h2>
+
+  <button data-page="ai-detail" style="margin-bottom:16px; background:var(--surface-2); color:var(--text-accent); border:1px solid var(--border); border-radius:var(--radius); padding:11px 18px; font-size:13px; font-weight:600; box-shadow:none;">🔍 AI 상세 분석 결과 보기</button>
+
+  <div class="mr-filter-bar">
+    <div class="mr-filter-item">
+      <label>기간</label>
+      <select id="mr-f-period" onchange="mrApplyFilter()">
+        <option value="today">오늘</option>
+        <option value="week">이번 주</option>
+        <option value="month">이번 달</option>
+      </select>
+    </div>
+    <div class="mr-filter-item">
+      <label>담당자</label>
+      <select id="mr-f-worker" onchange="mrApplyFilter()">
+        <option value="all">전체</option>
+        <option value="박〇〇">박〇〇</option>
+        <option value="이〇〇">이〇〇</option>
+        <option value="최〇〇">최〇〇</option>
+      </select>
+    </div>
+    <div class="mr-filter-item">
+      <label>채널</label>
+      <select id="mr-f-channel" onchange="mrApplyFilter()">
+        <option value="all">전체</option>
+        <option value="대형마트">대형마트</option>
+        <option value="SSM">SSM</option>
+        <option value="편의점">편의점</option>
+      </select>
+    </div>
+    <div class="mr-filter-item">
+      <label>미션 유형</label>
+      <select id="mr-f-mission" onchange="mrApplyFilter()">
+        <option value="all">전체</option>
+        <option value="oos">OOS 확인</option>
+        <option value="competitor">경쟁사 조사</option>
+        <option value="pop">POP 확인</option>
+        <option value="promo">행사현황 조사</option>
+        <option value="order">발주 요청</option>
+        <option value="checklist">체크리스트</option>
+        <option value="note">특이사항 메모</option>
+      </select>
+    </div>
+    <button class="mr-search-btn" onclick="mrApplyFilter()">검색</button>
+  </div>
+
+  <div class="mr-summary-bar" id="mr-summary"></div>
+
+  <div id="mr-results"></div>
+</div>
+
+<script>
+  var mrMissionMeta = {
+    oos:{label:'OOS 확인', icon:'📦'},
+    competitor:{label:'경쟁사 조사', icon:'🔍'},
+    pop:{label:'POP 확인', icon:'🏷️'},
+    promo:{label:'행사현황 조사', icon:'🎪'},
+    order:{label:'발주 요청', icon:'📝'},
+    checklist:{label:'체크리스트', icon:'✅'},
+    note:{label:'특이사항 메모', icon:'💬'}
+  };
+
+  // 근무자 앱(w_worker_flow.html)에서 제출된 값이 실제로는 여기로 쌓이는 구조라고 가정한 목데이터
+  var mrRecords = [
+    { store:'이마트 해운대점', channel:'대형마트', worker:'박〇〇', missionKey:'oos', time:'09:42',
+      detail:[['SKU','더미식 장인라면 얼큰한맛'],['사유','입고 지연으로 3일째 품절']], photo:true },
+    { store:'이마트 해운대점', channel:'대형마트', worker:'박〇〇', missionKey:'competitor', time:'09:47',
+      detail:[['브랜드','경쟁사 A'],['Facing 수','4']], photo:true },
+    { store:'이마트 해운대점', channel:'대형마트', worker:'박〇〇', missionKey:'pop', time:'09:50',
+      detail:[['부착 상태','정상']], photo:true },
+
+    { store:'롯데마트 창원점', channel:'대형마트', worker:'이〇〇', missionKey:'promo', time:'11:15',
+      detail:[['행사 진행 여부','진행중'],['POP 설치 여부','설치됨']], photo:true },
+    { store:'롯데마트 창원점', channel:'대형마트', worker:'이〇〇', missionKey:'order', time:'11:20',
+      detail:[['SKU','The미식 육즙고기교자'],['현재 수량','3'],['권장 수량','12'],['메모','주말 물량 부족 예상']], photo:false },
+
+    { store:'이마트 울산점', channel:'대형마트', worker:'최〇〇', missionKey:'checklist', time:'14:02',
+      detail:[['체크 항목','가격표 확인, 냉장·냉동 보관 온도 확인']], photo:false },
+    { store:'이마트 울산점', channel:'대형마트', worker:'최〇〇', missionKey:'note', time:'14:05',
+      detail:[['메모','매장 리모델링으로 다음 주 진열 위치 변경 예정']], photo:false }
+  ];
+
+  function mrApplyFilter(){
+    const worker = document.getElementById('mr-f-worker').value;
+    const channel = document.getElementById('mr-f-channel').value;
+    const mission = document.getElementById('mr-f-mission').value;
+    // 기간 필터는 목데이터가 오늘자 하루치뿐이라 UI만 제공 (실제 연동 시 서버 쿼리 파라미터로 사용)
+
+    const filtered = mrRecords.filter(r =>
+      (worker === 'all' || r.worker === worker) &&
+      (channel === 'all' || r.channel === channel) &&
+      (mission === 'all' || r.missionKey === mission)
+    );
+
+    mrRender(filtered);
+  }
+
+  function mrRender(records){
+    const resultsEl = document.getElementById('mr-results');
+    const summaryEl = document.getElementById('mr-summary');
+    resultsEl.innerHTML = '';
+
+    if(records.length === 0){
+      resultsEl.innerHTML = '<div class="mr-empty">조건에 맞는 미션 결과가 없습니다.</div>';
+      summaryEl.innerHTML = '';
+      return;
+    }
+
+    const storeNames = [...new Set(records.map(r => r.store))];
+    const workerNames = [...new Set(records.map(r => r.worker))];
+    summaryEl.innerHTML = `매장 <b>${storeNames.length}곳</b> · 담당자 <b>${workerNames.length}명</b> · 제출 미션 <b>${records.length}건</b>`;
+
+    storeNames.forEach(storeName => {
+      const storeRecords = records.filter(r => r.store === storeName);
+      const channel = storeRecords[0].channel;
+      const worker = [...new Set(storeRecords.map(r => r.worker))].join(', ');
+
+      const card = document.createElement('div');
+      card.className = 'mr-store-card';
+
+      const logsHtml = storeRecords.map(r => {
+        const meta = mrMissionMeta[r.missionKey];
+        const detailHtml = r.detail.map(([k,v]) => `<span class="k">${k}</span> ${v}`).join(' · ');
+        return `
+          <div class="mr-log-row">
+            <div class="mr-log-icon">${meta.icon}</div>
+            <div class="mr-log-body">
+              <div class="mr-log-top">
+                <span class="mr-log-label">${meta.label}</span>
+                <span class="mr-log-time">${r.time}</span>
+              </div>
+              <div class="mr-log-detail">${detailHtml}</div>
+              ${r.photo ? '<div class="mr-photo-chip">📷 사진 1장 첨부됨</div>' : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      card.innerHTML = `
+        <div class="mr-store-head">
+          <div>
+            <div class="mr-store-name">${storeName}</div>
+            <div class="mr-store-meta">${channel} · 담당 ${worker}</div>
+          </div>
+          <span class="mr-store-badge">${storeRecords.length}건 제출</span>
+        </div>
+        ${logsHtml}
+      `;
+      resultsEl.appendChild(card);
+    });
+  }
+
+  mrRender(mrRecords);
+</script>

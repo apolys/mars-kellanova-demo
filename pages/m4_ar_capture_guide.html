@@ -1,0 +1,284 @@
+<link rel="stylesheet" href="../retail-ai.css">
+<style>
+  .m4-outer{ padding:24px 0; display:flex; justify-content:center; }
+  .m4-phone{
+    width:320px; background:#1a1a18; border-radius:20px; padding:10px; position:relative;
+  }
+  .m4-camera-box{
+    position:relative; height:340px; border-radius:12px; overflow:hidden; background:#2c2c2a;
+  }
+  .m4-camera-box video{ width:100%; height:100%; object-fit:cover; display:block; }
+  .m4-guide-overlay{ position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+  .m4-guide-hint{
+    position:absolute; top:12px; left:12px; right:12px; background:rgba(0,0,0,0.55);
+    color:#FAEEDA; font-size:12px; padding:8px 12px; border-radius:8px; text-align:center;
+  }
+  .m4-shutter-wrap{ display:flex; justify-content:center; align-items:center; padding:16px 0 4px; }
+  .m4-shutter{
+    width:56px; height:56px; border-radius:50%; border:3px solid #FAEEDA;
+    display:flex; align-items:center; justify-content:center; background:none; cursor:pointer;
+  }
+  .m4-shutter-inner{ width:44px; height:44px; border-radius:50%; background:#FAEEDA; }
+  .m4-retake-btn{
+    width:100%; margin-top:4px; background:#3a3a36; color:#FAEEDA; border:none;
+    border-radius:12px; padding:12px; font-size:13px; cursor:pointer;
+  }
+
+  .m4-result-box{
+    margin-top:16px; background:#211f1c; border-radius:16px; padding:18px; display:none;
+  }
+  .m4-result-score{ font-size:28px; font-weight:700; margin-bottom:10px; }
+  .m4-result-score.ok{ color:#7ed08a; }
+  .m4-result-score.warn{ color:#f0b95c; }
+  .m4-result-score.bad{ color:#e0685f; }
+  .m4-result-check{ font-size:13px; padding:5px 0; color:#d8d6cd; }
+  .m4-result-check.pass::before{ content:"✓ "; color:#7ed08a; }
+  .m4-result-check.fail::before{ content:"✗ "; color:#e0685f; }
+
+  .m4-error-box{
+    margin-top:16px; background:#3a1f1f; color:#f0a3a3; border-radius:12px;
+    padding:12px 14px; font-size:12.5px; display:none; white-space:pre-line;
+  }
+
+  /* 촬영 전 체크 / 촬영 실패 예시 — 기존 카메라 UI는 건드리지 않고 위아래에 추가되는 패널 */
+  .m4-precheck-box{
+    width:320px; margin:0 auto 14px; background:#1a1a18; border-radius:16px; padding:16px 18px;
+  }
+  .m4-precheck-title{ font-size:13px; font-weight:700; color:#FAEEDA; margin-bottom:8px; }
+  .m4-precheck-item{ font-size:12.5px; color:#d8d6cd; padding:4px 0; }
+  .m4-precheck-item::before{ content:"☑ "; color:#FAC775; }
+
+  .m4-fail-box{
+    width:320px; margin:14px auto 0; background:#1a1a18; border-radius:16px; padding:16px 18px;
+  }
+  .m4-fail-title{ font-size:13px; font-weight:700; color:#FAEEDA; margin-bottom:10px; }
+  .m4-fail-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; }
+  .m4-fail-item{ text-align:center; }
+  .m4-fail-item svg{ width:100%; height:44px; }
+  .m4-fail-label{ font-size:10.5px; color:#9c9a90; margin-top:4px; }
+
+  .m4-result-check.pending{ color:#9c9a90; }
+  .m4-result-check.pending::before{ content:"… "; color:#FAC775; }
+  .m4-handoff-note{ font-size:12px; color:#9c9a90; margin-top:10px; line-height:1.5; }
+</style>
+
+<h2 class="screen-caption">M4 이미지 캡처 — 실제 카메라로 촬영하면 밝기·선명도를 즉시 분석해 촬영 적합도를 판정합니다. (서버 호출 없이 브라우저에서 바로 계산되는 로컬 판정 단계) 촬영 전 체크리스트와 실패 예시 가이드를 추가해 현장 직원이 AI 분석 가능한 품질로 촬영하도록 안내하며, 통과 시 M1 AI 매대 스코어링으로 전달된다.</h2>
+
+<div class="m4-precheck-box">
+  <div class="m4-precheck-title">촬영 전 체크</div>
+  <div class="m4-precheck-item">매대 전체가 프레임 안에 포함되도록</div>
+  <div class="m4-precheck-item">가격표가 보이도록 정면에서 촬영</div>
+  <div class="m4-precheck-item">반사광·흔들림 주의</div>
+  <div class="m4-precheck-item">너무 어둡거나 기울어졌다면 재촬영</div>
+</div>
+
+<div class="m4-outer">
+  <div class="m4-phone">
+    <div class="m4-camera-box">
+      <video id="m4Video" autoplay playsinline muted></video>
+      <canvas id="m4Canvas" style="display:none;"></canvas>
+
+      <svg class="m4-guide-overlay" viewBox="0 0 280 340" preserveAspectRatio="none">
+        <rect x="10" y="10" width="260" height="320" fill="none" stroke="#FAC775" stroke-width="2" stroke-dasharray="8 6" rx="8"/>
+        <line x1="10" y1="120" x2="270" y2="120" stroke="#FAC775" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>
+        <line x1="10" y1="230" x2="270" y2="230" stroke="#FAC775" stroke-width="1" stroke-dasharray="4 4" opacity="0.6"/>
+      </svg>
+
+      <div class="m4-guide-hint" id="m4GuideHint">가이드라인에 매대 3단을 맞춰주세요</div>
+    </div>
+
+    <div class="m4-shutter-wrap" id="m4ShutterWrap">
+      <button class="m4-shutter" id="m4BtnCapture" aria-label="촬영">
+        <span class="m4-shutter-inner"></span>
+      </button>
+    </div>
+    <button class="m4-retake-btn" id="m4BtnRetake" style="display:none;">다시 촬영</button>
+
+    <div class="m4-result-box" id="m4ResultBox"></div>
+    <div class="m4-error-box" id="m4ErrorBox"></div>
+  </div>
+</div>
+
+<div class="m4-fail-box">
+  <div class="m4-fail-title">이렇게 찍으면 재촬영이 필요해요</div>
+  <div class="m4-fail-grid">
+    <div class="m4-fail-item">
+      <svg viewBox="0 0 60 44"><rect x="4" y="4" width="52" height="36" rx="4" fill="none" stroke="#55534c" stroke-width="2"/><circle cx="30" cy="22" r="10" fill="#55534c" opacity="0.5" filter="blur(2px)"/></svg>
+      <div class="m4-fail-label">흐림</div>
+    </div>
+    <div class="m4-fail-item">
+      <svg viewBox="0 0 60 44"><rect x="4" y="4" width="52" height="36" rx="4" fill="none" stroke="#55534c" stroke-width="2"/><path d="M8 8 L52 40" stroke="#FAEEDA" stroke-width="10" opacity="0.35"/></svg>
+      <div class="m4-fail-label">반사</div>
+    </div>
+    <div class="m4-fail-item">
+      <svg viewBox="0 0 60 44"><rect x="10" y="6" width="40" height="32" rx="4" fill="none" stroke="#55534c" stroke-width="2" transform="rotate(14 30 22)"/></svg>
+      <div class="m4-fail-label">기울어짐</div>
+    </div>
+    <div class="m4-fail-item">
+      <svg viewBox="0 0 60 44"><rect x="4" y="4" width="52" height="36" rx="4" fill="none" stroke="#55534c" stroke-width="2"/><rect x="30" y="26" width="26" height="14" fill="none" stroke="#e0685f" stroke-width="2" stroke-dasharray="3 2"/></svg>
+      <div class="m4-fail-label">가격표 잘림</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ⚙️ SPA(fetch+innerHTML) 구조라 재방문 시 스크립트가 다시 실행됨 → 최상단은 전부 var 사용
+  var m4Video = document.getElementById('m4Video');
+  var m4Canvas = document.getElementById('m4Canvas');
+  var m4BtnCapture = document.getElementById('m4BtnCapture');
+  var m4BtnRetake = document.getElementById('m4BtnRetake');
+  var m4ShutterWrap = document.getElementById('m4ShutterWrap');
+  var m4GuideHint = document.getElementById('m4GuideHint');
+  var m4ResultBox = document.getElementById('m4ResultBox');
+  var m4ErrorBox = document.getElementById('m4ErrorBox');
+
+  var M4_ANALYSIS_WIDTH = 320; // 분석용 축소 크기 (속도용, 제출 이미지 자체는 축소 안 함)
+
+  async function m4StartCamera(){
+    try {
+      var stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' } },
+        audio: false
+      });
+      m4Video.srcObject = stream;
+    } catch (err) {
+      m4ShowError('카메라를 시작할 수 없습니다: ' + err.message +
+        '\n(HTTPS 환경인지, 브라우저 카메라 권한을 허용했는지 확인해주세요)');
+    }
+  }
+
+  function m4CaptureFrame(){
+    var vw = m4Video.videoWidth;
+    var vh = m4Video.videoHeight;
+    if (!vw || !vh) {
+      m4ShowError('카메라 화면을 아직 불러오지 못했습니다. 잠시 후 다시 시도해주세요.');
+      return false;
+    }
+    m4Canvas.width = vw;
+    m4Canvas.height = vh;
+    var ctx = m4Canvas.getContext('2d');
+    ctx.drawImage(m4Video, 0, 0, vw, vh);
+    return true;
+  }
+
+  function m4AnalyzeLocal(sourceCanvas){
+    var scale = M4_ANALYSIS_WIDTH / sourceCanvas.width;
+    var aw = M4_ANALYSIS_WIDTH;
+    var ah = Math.round(sourceCanvas.height * scale);
+
+    var analysisCanvas = document.createElement('canvas');
+    analysisCanvas.width = aw;
+    analysisCanvas.height = ah;
+    var actx = analysisCanvas.getContext('2d');
+    actx.drawImage(sourceCanvas, 0, 0, aw, ah);
+
+    var imageData = actx.getImageData(0, 0, aw, ah);
+    var brightness = m4ComputeBrightness(imageData);
+    var sharpness = m4ComputeSharpness(imageData, aw, ah);
+
+    // ⚠️ ai-capture-poc에서 실기기 검증 완료된 임계값 (밝기 60~210, 선명도 300)
+    var reason = [];
+    var score = 100;
+
+    if (brightness < 60) {
+      score -= 30;
+      reason.push('너무 어두움 (밝기 부족)');
+    } else if (brightness > 210) {
+      score -= 25;
+      reason.push('너무 밝음 (역광/과다노출 의심)');
+    } else {
+      reason.push('밝기 양호');
+    }
+
+    if (sharpness < 300) {
+      score -= 35;
+      reason.push('흔들림 또는 초점 불량 의심');
+    } else {
+      reason.push('초점 양호');
+    }
+
+    score = Math.max(0, Math.min(100, score));
+    return { capture_ok: score >= 60, score: score, reason: reason };
+  }
+
+  function m4ComputeBrightness(imageData){
+    var data = imageData.data;
+    var total = 0, count = 0;
+    for (var i = 0; i < data.length; i += 4) {
+      total += 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+      count++;
+    }
+    return total / count;
+  }
+
+  function m4ComputeSharpness(imageData, width, height){
+    var data = imageData.data;
+    var gray = new Float32Array(width * height);
+    for (var i = 0; i < width * height; i++) {
+      gray[i] = 0.299 * data[i * 4] + 0.587 * data[i * 4 + 1] + 0.114 * data[i * 4 + 2];
+    }
+    var sum = 0, sumSq = 0, count = 0;
+    for (var y = 1; y < height - 1; y++) {
+      for (var x = 1; x < width - 1; x++) {
+        var idx = y * width + x;
+        var lap = gray[idx - width] + gray[idx + width] + gray[idx - 1] + gray[idx + 1] - 4 * gray[idx];
+        sum += lap;
+        sumSq += lap * lap;
+        count++;
+      }
+    }
+    var mean = sum / count;
+    return sumSq / count - mean * mean;
+  }
+
+  function m4RenderResult(data){
+    var scoreClass = data.score >= 80 ? 'ok' : (data.score >= 60 ? 'warn' : 'bad');
+    var reasonHtml = data.reason.map(function(r){
+      var isFail = /부족|의심|불량|과다노출/.test(r);
+      return '<div class="m4-result-check ' + (isFail ? 'fail' : 'pass') + '">' + r + '</div>';
+    }).join('');
+    // 매대 포함 여부 / 가격표 인식 가능 여부는 로컬 브라우저에서 즉시 계산하지 않고
+    // M1 서버 단계(YOLO/OCR)에서 확인되는 항목이라 '대기' 상태로만 표시한다.
+    var pendingHtml =
+      '<div class="m4-result-check pending">매대 포함 여부 · AI 서버 분석에서 확인</div>' +
+      '<div class="m4-result-check pending">가격표 인식 가능 여부 · AI 서버 분석에서 확인</div>';
+    var aiBtnHtml = data.capture_ok
+      ? '<div class="m4-handoff-note">촬영 품질 기준을 통과했습니다. 이 사진은 M1 AI 매대 스코어링으로 전달됩니다.</div>' +
+        '<button onclick="window.navigate(\'ai-detail\')" style="width:100%;margin-top:10px;background:#3a3a36;color:#FAEEDA;border:1px solid #55534c;border-radius:12px;padding:12px;font-size:13px;font-weight:600;box-shadow:none;">📤 M1 AI 매대 분석으로 전달</button>'
+      : '<div class="m4-handoff-note">촬영 품질 기준 미달로 M1 분석에 전달되지 않습니다. 다시 촬영해주세요.</div>';
+    m4ResultBox.innerHTML = '<div class="m4-result-score ' + scoreClass + '">' + data.score + '점</div>' + reasonHtml + pendingHtml + aiBtnHtml;
+    m4ResultBox.style.display = 'block';
+  }
+
+  function m4ShowError(message){
+    m4ErrorBox.textContent = message;
+    m4ErrorBox.style.display = 'block';
+  }
+  function m4ResetError(){
+    m4ErrorBox.style.display = 'none';
+    m4ErrorBox.textContent = '';
+  }
+
+  m4BtnCapture.addEventListener('click', function(){
+    m4ResetError();
+    var ok = m4CaptureFrame();
+    if (!ok) return;
+
+    var data = m4AnalyzeLocal(m4Canvas);
+    m4RenderResult(data);
+
+    m4ShutterWrap.style.display = 'none';
+    m4GuideHint.style.display = 'none';
+    m4BtnRetake.style.display = 'block';
+  });
+
+  m4BtnRetake.addEventListener('click', function(){
+    m4ResultBox.style.display = 'none';
+    m4BtnRetake.style.display = 'none';
+    m4ShutterWrap.style.display = 'flex';
+    m4GuideHint.style.display = 'block';
+    m4ResetError();
+  });
+
+  m4StartCamera();
+</script>

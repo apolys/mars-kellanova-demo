@@ -1,0 +1,314 @@
+<link rel="stylesheet" href="../retail-ai.css">
+<h2 class="screen-caption">Platform Home Dashboard — 운영자가 로그인하면 가장 먼저 보는 화면. Education/Workforce/Contract/AI Vision/Analytics 전체 핵심 KPI와 오늘 해야 할 일을 한눈에 보여준다.</h2>
+
+<div style="max-width:1080px; margin:0 auto;">
+
+  <!-- 상단 헤더 -->
+  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
+    <div>
+      <div style="font-size:17px; font-weight:700;">안녕하세요, 김영수 팀장님</div>
+      <div style="font-size:12.5px; color:var(--text-secondary); margin-top:3px;">2026.07.10 · 하림 전국 운영현황</div>
+    </div>
+    <div class="card" style="padding:10px 16px; display:flex; align-items:center; gap:8px;">
+      <span style="font-size:15px;">🔔</span>
+      <span style="font-size:12.5px; color:var(--text-secondary);">오늘 알림</span>
+      <span class="badge" style="background:var(--bg-danger); color:var(--text-danger);">3건</span>
+    </div>
+  </div>
+
+  <!-- 1행: KPI 카드 6개 -->
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:16px;">
+    <div class="card" style="padding:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <span style="font-size:18px;">👥</span>
+        <span style="font-size:11px; color:var(--text-success); font-weight:600;">▲ 3.2%</span>
+      </div>
+      <div style="font-size:20px; font-weight:700; margin-top:8px;">248명</div>
+      <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">오늘 근무</div>
+    </div>
+    <div class="card" style="padding:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <span style="font-size:18px;">✅</span>
+        <span style="font-size:11px; color:var(--text-success); font-weight:600;">▲ 1.1%</span>
+      </div>
+      <div style="font-size:20px; font-weight:700; margin-top:8px;">96%</div>
+      <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">출근율</div>
+    </div>
+    <div class="card" style="padding:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <span style="font-size:18px;">🎓</span>
+        <span style="font-size:11px; color:var(--text-success); font-weight:600;">▲ 4.0%</span>
+      </div>
+      <div style="font-size:20px; font-weight:700; margin-top:8px;">91%</div>
+      <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">교육 수료율</div>
+    </div>
+    <div class="card" style="padding:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <span style="font-size:18px;">📝</span>
+        <span style="font-size:11px; color:var(--text-danger); font-weight:600;">▼ 2건</span>
+      </div>
+      <div style="font-size:20px; font-weight:700; margin-top:8px;">18건</div>
+      <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">전자계약</div>
+    </div>
+    <div class="card" style="padding:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <span style="font-size:18px;">📷</span>
+        <span style="font-size:11px; color:var(--text-success); font-weight:600;">▲ 128건</span>
+      </div>
+      <div style="font-size:20px; font-weight:700; margin-top:8px;">1,284건</div>
+      <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">AI 분석</div>
+    </div>
+    <div class="card" style="padding:16px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+        <span style="font-size:18px;">🏆</span>
+        <span style="font-size:11px; color:var(--text-success); font-weight:600;">▲ 2점</span>
+      </div>
+      <div style="font-size:20px; font-weight:700; margin-top:8px; color:var(--text-accent);">92점</div>
+      <div style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">평균 Shelf Score</div>
+    </div>
+  </div>
+
+  <!-- 2행: 오늘 운영현황 (2/3) + My Tasks (1/3) -->
+  <div style="display:grid; grid-template-columns:2fr 1fr; gap:14px; margin-bottom:16px; align-items:start;">
+
+    <div class="card" style="padding:20px 22px;">
+      <div style="font-size:14px; font-weight:700; margin-bottom:14px;">오늘 운영현황</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px;">
+        <div style="background:var(--surface-2); border-radius:12px; padding:12px 14px;">
+          <div style="font-size:11.5px; color:var(--text-muted);">오늘 근무</div>
+          <div style="font-size:16px; font-weight:700; margin-top:3px;">248명</div>
+        </div>
+        <div style="background:var(--surface-2); border-radius:12px; padding:12px 14px;">
+          <div style="font-size:11.5px; color:var(--text-muted);">출근 완료</div>
+          <div style="font-size:16px; font-weight:700; margin-top:3px; color:var(--text-success);">231명</div>
+        </div>
+        <div style="background:var(--surface-2); border-radius:12px; padding:12px 14px;">
+          <div style="font-size:11.5px; color:var(--text-muted);">미출근</div>
+          <div style="font-size:16px; font-weight:700; margin-top:3px; color:var(--text-danger);">17명</div>
+        </div>
+        <div style="background:var(--surface-2); border-radius:12px; padding:12px 14px;">
+          <div style="font-size:11.5px; color:var(--text-muted);">교육 예정</div>
+          <div style="font-size:16px; font-weight:700; margin-top:3px;">24명</div>
+        </div>
+        <div style="background:var(--surface-2); border-radius:12px; padding:12px 14px;">
+          <div style="font-size:11.5px; color:var(--text-muted);">AI 분석 완료</div>
+          <div style="font-size:16px; font-weight:700; margin-top:3px;">128점포</div>
+        </div>
+        <div style="background:var(--surface-2); border-radius:12px; padding:12px 14px;">
+          <div style="font-size:11.5px; color:var(--text-muted);">결품 Alert</div>
+          <div style="font-size:16px; font-weight:700; margin-top:3px; color:var(--text-danger);">9건</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:20px 22px; border:2px solid var(--border-warning);">
+      <div style="font-size:14px; font-weight:700; margin-bottom:12px;">🎯 오늘 해야 할 일</div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); cursor:pointer;" data-page="edu-course-list">
+          <span>🔴</span>
+          <div style="flex:1;">
+            <div style="font-size:12.5px; font-weight:600;">필수교육 미수료</div>
+            <div style="font-size:11px; color:var(--text-muted);">3명</div>
+          </div>
+          <span style="font-size:11.5px; color:var(--text-accent); font-weight:600;">바로가기 →</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); cursor:pointer;" data-page="contract">
+          <span>🟠</span>
+          <div style="flex:1;">
+            <div style="font-size:12.5px; font-weight:600;">전자계약 승인</div>
+            <div style="font-size:11px; color:var(--text-muted);">8건</div>
+          </div>
+          <span style="font-size:11.5px; color:var(--text-accent); font-weight:600;">계약관리 →</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); cursor:pointer;" data-page="m2">
+          <span>🔴</span>
+          <div style="flex:1;">
+            <div style="font-size:12.5px; font-weight:600;">결품 Alert</div>
+            <div style="font-size:11px; color:var(--text-muted);">9건</div>
+          </div>
+          <span style="font-size:11.5px; color:var(--text-accent); font-weight:600;">AI Vision →</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); cursor:pointer;" data-page="m3">
+          <span>🟡</span>
+          <div style="flex:1;">
+            <div style="font-size:12.5px; font-weight:600;">오늘 방문 예정</div>
+            <div style="font-size:11px; color:var(--text-muted);">12개 점포</div>
+          </div>
+          <span style="font-size:11.5px; color:var(--text-accent); font-weight:600;">SV Dashboard →</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--border); cursor:pointer;" data-page="ai-report">
+          <span>🟢</span>
+          <div style="flex:1;">
+            <div style="font-size:12.5px; font-weight:600;">AI 분석 완료</div>
+            <div style="font-size:11px; color:var(--text-muted);">128점포</div>
+          </div>
+          <span style="font-size:11.5px; color:var(--text-accent); font-weight:600;">결과보기 →</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 0; cursor:pointer;" data-page="edu-notice">
+          <span>⚪</span>
+          <div style="flex:1;">
+            <div style="font-size:12.5px; font-weight:600;">신규 공지</div>
+            <div style="font-size:11px; color:var(--text-muted);">2건</div>
+          </div>
+          <span style="font-size:11.5px; color:var(--text-accent); font-weight:600;">공지보기 →</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 3행: Education Center + AI Vision -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+
+    <div class="card" style="padding:20px 22px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <span style="font-size:14px; font-weight:700;">🎓 Education Center</span>
+        <span style="font-size:11.5px; color:var(--text-accent); font-weight:600; cursor:pointer;" data-page="edu-dashboard">바로가기 →</span>
+      </div>
+      <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">이번주 필수교육 진행률</div>
+      <div style="height:8px; background:var(--surface-2); border-radius:999px; overflow:hidden; margin-bottom:10px;">
+        <div style="height:100%; width:76%; background:var(--fill-primary);"></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-secondary);">
+        <span>최근 수료: 고객응대 매뉴얼</span>
+        <span style="font-weight:600; color:var(--text-success);">평균 91점</span>
+      </div>
+    </div>
+
+    <div class="card" style="padding:20px 22px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <span style="font-size:14px; font-weight:700;">📷 AI Vision</span>
+        <span style="font-size:11.5px; color:var(--text-accent); font-weight:600; cursor:pointer;" data-page="m3">AI Dashboard →</span>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px;">
+        <div style="text-align:center;">
+          <div style="font-size:16px; font-weight:700; color:var(--text-accent);">92점</div>
+          <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">Shelf Score</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:16px; font-weight:700; color:var(--text-danger);">9건</div>
+          <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">결품</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:16px; font-weight:700; color:var(--text-warning);">18건</div>
+          <div style="font-size:10.5px; color:var(--text-muted); margin-top:2px;">가격표 오류</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4행: Workforce + Contract -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;">
+
+    <div class="card" style="padding:20px 22px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <span style="font-size:14px; font-weight:700;">🗓️ Workforce</span>
+        <span style="font-size:11.5px; color:var(--text-accent); font-weight:600; cursor:pointer;" data-page="workforce">바로가기 →</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:6px;">
+        <span style="color:var(--text-secondary);">금일 배정</span><span style="font-weight:600;">248명</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:6px;">
+        <span style="color:var(--text-secondary);">미배정</span><span style="font-weight:600; color:var(--text-warning);">7명</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:12.5px;">
+        <span style="color:var(--text-secondary);">휴무</span><span style="font-weight:600;">34명</span>
+      </div>
+    </div>
+
+    <div class="card" style="padding:20px 22px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <span style="font-size:14px; font-weight:700;">📑 Contract</span>
+        <span style="font-size:11.5px; color:var(--text-accent); font-weight:600; cursor:pointer;" data-page="contract">바로가기 →</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:6px;">
+        <span style="color:var(--text-secondary);">완료</span><span style="font-weight:600; color:var(--text-success);">212건</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:6px;">
+        <span style="color:var(--text-secondary);">대기</span><span style="font-weight:600; color:var(--text-warning);">18건</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:12.5px;">
+        <span style="color:var(--text-secondary);">미서명</span><span style="font-weight:600; color:var(--text-danger);">5건</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5행: Analytics -->
+  <div class="card" style="padding:20px 22px; margin-bottom:14px;">
+    <div style="font-size:14px; font-weight:700; margin-bottom:14px;">📊 이번달 운영 KPI (Analytics)</div>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>매출 영향도</span><span style="font-weight:600; color:var(--text-success);">+18%</span></div>
+        <div style="height:7px; background:var(--surface-2); border-radius:999px; overflow:hidden;"><div style="height:100%; width:68%; background:var(--text-success);"></div></div>
+      </div>
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>교육 수료율</span><span style="font-weight:600;">91%</span></div>
+        <div style="height:7px; background:var(--surface-2); border-radius:999px; overflow:hidden;"><div style="height:100%; width:91%; background:var(--fill-primary);"></div></div>
+      </div>
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>평균 Shelf Score</span><span style="font-weight:600; color:var(--text-accent);">92점</span></div>
+        <div style="height:7px; background:var(--surface-2); border-radius:999px; overflow:hidden;"><div style="height:100%; width:92%; background:var(--text-accent);"></div></div>
+      </div>
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>OOS 감소율</span><span style="font-weight:600; color:var(--text-success);">-24%</span></div>
+        <div style="height:7px; background:var(--surface-2); border-radius:999px; overflow:hidden;"><div style="height:100%; width:24%; background:var(--text-success);"></div></div>
+      </div>
+      <div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>ROI</span><span style="font-weight:600; color:var(--text-success);">1.8x (+18%)</span></div>
+        <div style="height:7px; background:var(--surface-2); border-radius:999px; overflow:hidden;"><div style="height:100%; width:60%; background:var(--text-success);"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6행: 최근 공지 -->
+  <div style="font-size:14px; font-weight:700; margin:2px 2px 10px;">최근 공지</div>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:90px;">
+    <div class="card" style="padding:14px 16px; cursor:pointer;" data-page="edu-notice">
+      <span class="badge" style="background:var(--bg-success); color:var(--text-success); font-size:10.5px;">신제품</span>
+      <div style="font-size:12.5px; font-weight:600; margin-top:8px;">용가리 신제품 2종 출시</div>
+    </div>
+    <div class="card" style="padding:14px 16px; cursor:pointer;" data-page="edu-notice">
+      <span class="badge" style="background:var(--bg-accent); color:var(--text-accent); font-size:10.5px;">교육추가</span>
+      <div style="font-size:12.5px; font-weight:600; margin-top:8px;">삼계탕 신제품 교육 추가</div>
+    </div>
+    <div class="card" style="padding:14px 16px; cursor:pointer;" data-page="edu-notice">
+      <span class="badge" style="background:var(--bg-warning); color:var(--text-warning); font-size:10.5px;">행사변경</span>
+      <div style="font-size:12.5px; font-weight:600; margin-top:8px;">해운대점 시식행사 일정 변경</div>
+    </div>
+    <div class="card" style="padding:14px 16px; cursor:pointer;" data-page="contract">
+      <span class="badge" style="background:var(--surface-3); color:var(--text-secondary); font-size:10.5px;">계약변경</span>
+      <div style="font-size:12.5px; font-weight:600; margin-top:8px;">전자계약 서식 개정 안내</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Quick Action (우측 하단 고정) -->
+<div style="position:fixed; right:26px; bottom:26px; display:flex; flex-direction:column; gap:8px; align-items:flex-end; z-index:5;">
+  <div id="platform-quick-actions" style="display:none; flex-direction:column; gap:8px;">
+    <button style="font-size:12.5px; padding:10px 16px;" data-page="edu-course-list">+ 교육 등록</button>
+    <button style="font-size:12.5px; padding:10px 16px;" data-page="workforce">+ 근무 배정</button>
+    <button style="font-size:12.5px; padding:10px 16px;" data-page="m4">+ AI 분석</button>
+    <button style="font-size:12.5px; padding:10px 16px;" data-page="contract">+ 계약 조회</button>
+  </div>
+  <button id="platform-quick-toggle" style="width:52px; height:52px; border-radius:50%; font-size:22px; padding:0; box-shadow:var(--shadow-md);">＋</button>
+</div>
+
+<script>
+  var platformQuickToggle = document.getElementById("platform-quick-toggle");
+  var platformQuickActions = document.getElementById("platform-quick-actions");
+
+  if (platformQuickToggle) {
+    platformQuickToggle.addEventListener("click", function(){
+      var isOpen = platformQuickActions.style.display === "flex";
+      platformQuickActions.style.display = isOpen ? "none" : "flex";
+      platformQuickToggle.textContent = isOpen ? "＋" : "×";
+    });
+  }
+</script>

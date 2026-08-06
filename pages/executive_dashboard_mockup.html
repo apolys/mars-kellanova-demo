@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="../retail-ai.css">
+<h2 class="screen-caption">경영진용 웹 대시보드 홈 화면 목업 — KPI 카드, 지역별 히트맵, 예외 알림 리스트로 구성</h2>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+  <div style="font-size:16px; font-weight:500; color:var(--text-primary);">하림 판매판촉 경영 대시보드</div>
+  <div style="font-size:12px; color:var(--text-muted);">최종 업데이트 5분 전</div>
+</div>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px; margin-bottom:20px;">
+  <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
+    <div style="font-size:13px; color:var(--text-secondary);">매출(전주비)</div>
+    <div style="font-size:22px; font-weight:500; margin-top:4px;">+6.2%</div>
+  </div>
+  <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
+    <div style="font-size:13px; color:var(--text-secondary);">Perfect Store Score</div>
+    <div style="font-size:22px; font-weight:500; margin-top:4px;">82점</div>
+  </div>
+  <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
+    <div style="font-size:13px; color:var(--text-secondary);">OOS율</div>
+    <div style="font-size:22px; font-weight:500; margin-top:4px; color:var(--text-danger);">4.1%</div>
+  </div>
+  <div style="background:var(--surface-1); border-radius:var(--radius); padding:1rem;">
+    <div style="font-size:13px; color:var(--text-secondary);">SPLH</div>
+    <div style="font-size:22px; font-weight:500; margin-top:4px;">₩138k</div>
+  </div>
+</div>
+
+<div style="font-size:14px; font-weight:500; margin-bottom:8px;">지역별 실행 스코어</div>
+<div style="display:grid; grid-template-columns:repeat(6,1fr); gap:6px; margin-bottom:20px;">
+  <div style="background:var(--bg-success); color:var(--text-success); border-radius:6px; padding:10px; font-size:12px; text-align:center;">수도권<br><span style="font-weight:500;font-size:15px;">91</span></div>
+  <div style="background:var(--bg-success); color:var(--text-success); border-radius:6px; padding:10px; font-size:12px; text-align:center;">경기<br><span style="font-weight:500;font-size:15px;">88</span></div>
+  <div style="background:var(--bg-warning); color:var(--text-warning); border-radius:6px; padding:10px; font-size:12px; text-align:center;">충청<br><span style="font-weight:500;font-size:15px;">74</span></div>
+  <div style="background:var(--bg-warning); color:var(--text-warning); border-radius:6px; padding:10px; font-size:12px; text-align:center;">호남<br><span style="font-weight:500;font-size:15px;">71</span></div>
+  <div style="background:var(--bg-danger); color:var(--text-danger); border-radius:6px; padding:10px; font-size:12px; text-align:center;">영남<br><span style="font-weight:500;font-size:15px;">63</span></div>
+  <div style="background:var(--bg-success); color:var(--text-success); border-radius:6px; padding:10px; font-size:12px; text-align:center;">강원<br><span style="font-weight:500;font-size:15px;">85</span></div>
+</div>
+
+<div style="font-size:14px; font-weight:500; margin-bottom:8px;">예외 알림</div>
+<div style="border:0.5px solid var(--border); border-radius:var(--radius); overflow:hidden;">
+  <div style="display:flex; justify-content:space-between; padding:10px 14px; border-bottom:0.5px solid var(--border); font-size:13px;">
+    <span>이마트 해운대점 3주 연속 진열준수율 하락</span>
+    <span style="color:var(--text-danger);">스코어 58점</span>
+  </div>
+  <div style="display:flex; justify-content:space-between; padding:10px 14px; border-bottom:0.5px solid var(--border); font-size:13px;">
+    <span>롯데마트 광주점 OOS 6시간 이상 미조치</span>
+    <span style="color:var(--text-danger);">긴급</span>
+  </div>
+  <div style="display:flex; justify-content:space-between; padding:10px 14px; font-size:13px;">
+    <span>이번 분기 프로모션 3건 마이너스 ROI</span>
+    <span style="color:var(--text-warning);">검토 필요</span>
+  </div>
+</div>

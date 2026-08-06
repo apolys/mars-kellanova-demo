@@ -1,0 +1,104 @@
+<div class="wrap">
+  <h2 class="screen-caption">시스템 아키텍처 — 박스를 클릭하면 해당 모듈 화면으로 바로 이동합니다.</h2>
+
+  <svg viewBox="0 0 680 620" width="100%">
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="#9AA0AC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+
+    <!-- M4 -->
+    <g class="node" data-page="m4">
+      <rect x="40" y="30" width="180" height="56" rx="10" fill="var(--surface-2)" stroke="var(--border)"/>
+      <text x="130" y="52" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text-primary)">M4. 이미지 캡처</text>
+      <text x="130" y="70" text-anchor="middle" font-size="12" fill="var(--text-secondary)">판촉사원 모바일 촬영</text>
+    </g>
+    <line x1="130" y1="86" x2="130" y2="120" stroke="#9AA0AC" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- M1 -->
+    <g class="node" data-page="m1">
+      <rect x="40" y="120" width="180" height="56" rx="10" fill="var(--bg-accent)" stroke="var(--primary)" stroke-width="1.5"/>
+      <text x="130" y="142" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text-accent)">M1. AI 스코어링 엔진</text>
+      <text x="130" y="160" text-anchor="middle" font-size="12" fill="var(--text-accent)">SKU·가격·POP 인식</text>
+    </g>
+    <line x1="220" y1="148" x2="270" y2="148" stroke="#9AA0AC" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- M2 -->
+    <g class="node" data-page="m2">
+      <rect x="270" y="120" width="180" height="56" rx="10" fill="var(--bg-danger)" stroke="var(--border-danger)" stroke-width="1.5"/>
+      <text x="360" y="142" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text-danger)">M2. OOS 관리</text>
+      <text x="360" y="160" text-anchor="middle" font-size="12" fill="var(--text-danger)">품절 탐지·알림·태스크</text>
+    </g>
+
+    <!-- M5 -->
+    <g class="node" data-page="m5">
+      <rect x="480" y="30" width="160" height="56" rx="10" fill="var(--bg-success)" stroke="var(--border-success)" stroke-width="1.5"/>
+      <text x="560" y="52" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text-success)">M5. 경쟁사·시장</text>
+      <text x="560" y="70" text-anchor="middle" font-size="12" fill="var(--text-success)">Nielsen·Circana 연동</text>
+    </g>
+
+    <!-- M6 -->
+    <g class="node" data-page="m6">
+      <rect x="480" y="120" width="160" height="56" rx="10" fill="var(--bg-success)" stroke="var(--border-success)" stroke-width="1.5"/>
+      <text x="560" y="142" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text-success)">M6. 고객접점 연계</text>
+      <text x="560" y="160" text-anchor="middle" font-size="12" fill="var(--text-success)">POS·멤버십·CRM</text>
+    </g>
+
+    <line x1="480" y1="58" x2="450" y2="140" stroke="#9AA0AC" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <line x1="480" y1="148" x2="450" y2="150" stroke="#9AA0AC" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <line x1="130" y1="176" x2="130" y2="230" stroke="#9AA0AC" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <line x1="360" y1="176" x2="360" y2="230" stroke="#9AA0AC" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- 통합 데이터 레이어: 대비를 강하게 -->
+    <g class="node" data-page="m7">
+      <rect x="40" y="230" width="600" height="72" rx="14" fill="var(--bg-accent)" stroke="var(--primary)" stroke-width="2.5"/>
+      <text x="60" y="256" font-size="15" font-weight="800" fill="var(--text-accent)">🗄 통합 데이터 레이어</text>
+      <text x="60" y="278" font-size="12.5" fill="var(--text-accent)">Store · SKU · VisitRecord · ScoreRecord · OOSAlert · Promotion · Employee</text>
+    </g>
+
+    <line x1="130" y1="302" x2="200" y2="345" stroke="#9AA0AC" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <line x1="360" y1="302" x2="360" y2="345" stroke="#9AA0AC" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <line x1="560" y1="302" x2="520" y2="345" stroke="#9AA0AC" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- M7 -->
+    <g class="node" data-page="m7">
+      <rect x="200" y="345" width="160" height="56" rx="10" fill="var(--bg-warning)" stroke="var(--border-warning)" stroke-width="1.5"/>
+      <text x="280" y="367" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text-warning)">M7. ROI 계산 엔진</text>
+      <text x="280" y="385" text-anchor="middle" font-size="12" fill="var(--text-warning)">기준선·증분이익 산출</text>
+    </g>
+
+    <!-- M8 -->
+    <g class="node" data-page="m8">
+      <rect x="380" y="345" width="160" height="56" rx="10" fill="var(--bg-warning)" stroke="var(--border-warning)" stroke-width="1.5"/>
+      <text x="460" y="367" text-anchor="middle" font-size="14" font-weight="700" fill="var(--text-warning)">M8. 인력운영(SPLH)</text>
+      <text x="460" y="385" text-anchor="middle" font-size="12" fill="var(--text-warning)">스케줄링 제안</text>
+    </g>
+
+    <line x1="280" y1="401" x2="340" y2="435" stroke="#9AA0AC" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <line x1="460" y1="401" x2="400" y2="435" stroke="#9AA0AC" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+    <!-- M3 통합 대시보드 -->
+    <rect x="80" y="435" width="520" height="150" rx="16" fill="var(--surface-2)" stroke="var(--primary)" stroke-width="1.5"/>
+    <text x="100" y="462" font-size="15" font-weight="800" fill="var(--text-primary)">M3. 3단 통합 대시보드</text>
+
+    <g class="node" data-page="m3" data-subtab="exec">
+      <rect x="100" y="478" width="150" height="86" rx="10" fill="var(--surface-1)" stroke="var(--border)"/>
+      <text x="175" y="512" text-anchor="middle" font-size="13" font-weight="700" fill="var(--text-primary)">경영진</text>
+      <text x="175" y="530" text-anchor="middle" font-size="11" fill="var(--text-secondary)">KPI·히트맵·ROI랭킹</text>
+    </g>
+    <g class="node" data-page="m3" data-subtab="sv">
+      <rect x="265" y="478" width="150" height="86" rx="10" fill="var(--surface-1)" stroke="var(--border)"/>
+      <text x="340" y="512" text-anchor="middle" font-size="13" font-weight="700" fill="var(--text-primary)">SV</text>
+      <text x="340" y="530" text-anchor="middle" font-size="11" fill="var(--text-secondary)">우선순위·이슈큐</text>
+    </g>
+    <g class="node" data-page="m3" data-subtab="field">
+      <rect x="430" y="478" width="150" height="86" rx="10" fill="var(--surface-1)" stroke="var(--border)"/>
+      <text x="505" y="512" text-anchor="middle" font-size="13" font-weight="700" fill="var(--text-primary)">현장</text>
+      <text x="505" y="530" text-anchor="middle" font-size="11" fill="var(--text-secondary)">체크리스트·즉시피드백</text>
+    </g>
+  </svg>
+
+  <div class="hint">박스를 클릭해보세요 · 경영진/SV/현장 박스는 M3 대시보드의 해당 탭으로 바로 이동합니다</div>
+</div>

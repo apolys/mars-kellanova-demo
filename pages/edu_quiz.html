@@ -1,0 +1,108 @@
+<link rel="stylesheet" href="../retail-ai.css">
+<h2 class="screen-caption">Quiz — 객관식/OX/이미지 문제로 구성된 퀴즈. 문항 진행률과 남은 시험시간을 표시한다.</h2>
+
+<div style="max-width:600px; margin:0 auto;">
+
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+    <span id="edu-quiz-progress-label" style="font-size:12.5px; color:var(--text-secondary);">문항 1 / 7</span>
+    <span style="font-size:12.5px; color:var(--text-danger);">⏱ 남은시간 08:12</span>
+  </div>
+  <div style="height:6px; background:var(--surface-2); border-radius:999px; margin-bottom:18px; overflow:hidden;">
+    <div id="edu-quiz-progress-bar" style="height:100%; width:14%; background:var(--fill-primary); transition:width .2s;"></div>
+  </div>
+
+  <div id="edu-quiz-question-area" class="card" style="padding:22px;">
+    <!-- 문항은 아래 스크립트에서 렌더링 -->
+  </div>
+
+</div>
+
+<script>
+  var eduQuizQuestions = [
+    {
+      type: "mcq",
+      text: "더미식 신제품은 어느 매대에 우선 진열해야 하나요?",
+      options: ["상온 매대 하단", "냉장 매대 본매대 중단", "냉동 매대 최상단", "엔드매대 하단"],
+      answer: 1
+    },
+    {
+      type: "ox",
+      text: "보관방식(냉장/냉동)과 진열위치(매대타입)는 서로 대체 관계이다.",
+      options: ["O", "X"],
+      answer: 1
+    },
+    {
+      type: "mcq",
+      text: "POP는 제품 기준 어디에 부착하는 것이 원칙인가요?",
+      options: ["제품 하단 10cm", "제품 상단 5cm 이내", "제품 좌측 20cm", "부착 위치 무관"],
+      answer: 1
+    },
+    {
+      type: "image",
+      text: "사진 속 진열 상태 중 가격표 각도가 기준(15° 이내)을 벗어난 매대를 고르세요.",
+      options: ["A 매대", "B 매대", "C 매대"],
+      answer: 2
+    },
+    {
+      type: "mcq",
+      text: "용가리 행사 운영 시 우선 배치 위치는?",
+      options: ["엔드매대", "상온 매대 최하단", "계산대 옆", "창고"],
+      answer: 0
+    },
+    {
+      type: "ox",
+      text: "POP 부착 없이도 Perfect Store Score 만점이 가능하다.",
+      options: ["O", "X"],
+      answer: 1
+    },
+    {
+      type: "mcq",
+      text: "OOS(품절) 의심 시 가장 먼저 해야 할 조치는?",
+      options: ["임의로 타 제품 채우기", "재고데이터 확인 후 Alert 등록", "본사에 바로 항의", "그냥 넘어간다"],
+      answer: 1
+    }
+  ];
+
+  var eduQuizCurrentIndex = 0;
+  var eduQuizAnswers = [];
+  var eduQuizArea = document.getElementById("edu-quiz-question-area");
+  var eduQuizProgressBar = document.getElementById("edu-quiz-progress-bar");
+  var eduQuizProgressLabel = document.getElementById("edu-quiz-progress-label");
+
+  function eduQuizRender(){
+    var q = eduQuizQuestions[eduQuizCurrentIndex];
+    var typeLabel = q.type === "mcq" ? "객관식" : (q.type === "ox" ? "OX" : "이미지 문제");
+    var optsHtml = "";
+    for (var i = 0; i < q.options.length; i++) {
+      optsHtml += '<button class="edu-quiz-option" data-idx="' + i + '" style="width:100%; text-align:left; background:var(--surface-2); color:var(--text-primary); box-shadow:none; margin-bottom:8px; font-weight:500;">' + q.options[i] + '</button>';
+    }
+    eduQuizArea.innerHTML =
+      '<span class="badge" style="background:var(--bg-accent); color:var(--text-accent); margin-bottom:12px;">' + typeLabel + '</span>' +
+      '<div style="font-size:14.5px; font-weight:600; margin:12px 0 16px; line-height:1.5;">' + q.text + '</div>' +
+      '<div>' + optsHtml + '</div>';
+
+    var opts = eduQuizArea.querySelectorAll(".edu-quiz-option");
+    opts.forEach(function(btn){
+      btn.addEventListener("click", function(){
+        eduQuizAnswers[eduQuizCurrentIndex] = parseInt(btn.dataset.idx, 10);
+        if (eduQuizCurrentIndex < eduQuizQuestions.length - 1) {
+          eduQuizCurrentIndex++;
+          eduQuizUpdateProgress();
+          eduQuizRender();
+        } else {
+          window.location.hash = "";
+          if (window.navigate) window.navigate("edu-result");
+        }
+      });
+    });
+
+    eduQuizUpdateProgress();
+  }
+
+  function eduQuizUpdateProgress(){
+    eduQuizProgressLabel.textContent = "문항 " + (eduQuizCurrentIndex + 1) + " / " + eduQuizQuestions.length;
+    eduQuizProgressBar.style.width = Math.round(((eduQuizCurrentIndex) / eduQuizQuestions.length) * 100 + (100 / eduQuizQuestions.length)) + "%";
+  }
+
+  eduQuizRender();
+</script>

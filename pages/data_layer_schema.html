@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>통합 데이터 레이어 — 데이터 구조</title>
+<link rel="stylesheet" href="../retail-ai.css">
+<style>
+  .wrap{max-width:960px;margin:0 auto}
+  .entity{margin-bottom:28px}
+  .entity-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+  .entity-head h3{font-size:16px;font-weight:800}
+  .entity-head .en{font-size:12px;color:var(--text-muted);font-family:monospace}
+  .entity-desc{font-size:13px;color:var(--text-secondary);margin-bottom:10px}
+  .rel{display:inline-block;font-size:11px;color:var(--text-accent);background:var(--bg-accent);padding:3px 8px;border-radius:999px;margin-right:6px;margin-bottom:8px}
+  table.schema{width:100%;border-collapse:collapse;font-size:12.5px}
+  table.schema th{text-align:left;color:var(--text-secondary);font-weight:700;border-bottom:1px solid var(--border);padding:8px 8px}
+  table.schema td{padding:8px 8px;border-bottom:1px solid var(--border);vertical-align:top}
+  table.schema td.field{font-family:monospace;font-weight:700;color:var(--text-primary);white-space:nowrap}
+  table.schema td.type{color:var(--text-accent);white-space:nowrap;font-family:monospace;font-size:11.5px}
+  table.schema tr:last-child td{border-bottom:none}
+  .card{padding:20px 22px}
+  .erd{background:var(--surface-2);border-radius:var(--radius-lg);padding:20px;margin-bottom:28px;font-size:12.5px;color:var(--text-secondary);line-height:2}
+  .erd b{color:var(--text-primary);font-family:monospace}
+  .note{font-size:12px;color:var(--text-muted);margin-top:30px;padding-top:16px;border-top:1px solid var(--border)}
+  .badge-pk{background:var(--bg-warning);color:var(--text-warning)}
+  .badge-fk{background:var(--bg-success);color:var(--text-success)}
+  .tag{font-size:10.5px;padding:2px 6px;border-radius:5px;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2 class="screen-caption">통합 데이터 레이어 — 8개 모듈이 공통으로 참조하는 핵심 엔티티의 필드 구조. 실제 데이터 정리 시 이 구조를 기준으로 맞추면 됩니다.</h2>
+
+  <div class="erd card">
+    <b>Employee</b> 1─N <b>VisitRecord</b> N─1 <b>Store</b><br>
+    <b>VisitRecord</b> 1─1 <b>ScoreRecord</b> (방문 1건당 스코어 1건)<br>
+    <b>Store</b> 1─N <b>OOSAlert</b> N─1 <b>SKU</b><br>
+    <b>Store</b> 1─N <b>CompetitorSnapshot</b><br>
+    <b>Promotion</b> N─N <b>SKU</b> (프로모션 1건에 여러 SKU 대상 가능)<br>
+    <b>Employee</b> N─N <b>Store</b> (담당 배정, 1인당 여러 점포 가능)
+  </div>
+
+  <!-- Store -->
+  <div class="entity card">
+    <div class="entity-head"><h3>Store</h3><span class="en">점포</span></div>
+    <div class="entity-desc">판촉 운영 대상 점포. Salesforce Consumer Goods Cloud의 Retail Store 오브젝트를 참고해 하림 운영에 맞게 축소 구성.</div>
+    <span class="rel">1:N VisitRecord</span><span class="rel">1:N OOSAlert</span><span class="rel">N:N Employee</span>
+    <table class="schema">
+      <tr><th>필드</th><th>타입</th><th>설명</th><th>예시</th></tr>
+      <tr><td class="field">store_id <span class="tag badge-pk">PK</span></td><td class="type">string</td><td>점포 고유 ID</td><td>ST-10231</td></tr>
+      <tr><td class="field">store_name</td><td class="type">string</td><td>점포명</td><td>이마트 해운대점</td></tr>
+      <tr><td class="field">channel</td><td class="type">enum</td><td>유통 채널</td><td>대형마트 / SSM / 편의점 / 온라인</td></tr>
+      <tr><td class="field">region</td><td class="type">string</td><td>권역</td><td>영남</td></tr>
+      <tr><td class="field">segment</td><td class="type">enum</td><td>점포 세그먼트(전략 분류)</td><td>핵심점 / 일반점 / 관리점</td></tr>
+      <tr><td class="field">grade</td><td class="type">enum</td><td>점포 등급(매출 규모 기준)</td><td>A / B / C</td></tr>
+      <tr><td class="field">address</td><td class="type">string</td><td>주소</td><td>-</td></tr>
+      <tr><td class="field">store_group_id</td><td class="type">string</td><td>상위 점포 그룹(체인/지역 묶음)</td><td>GRP-05</td></tr>
+      <tr><td class="field">gps_lat / gps_lng</td><td class="type">number</td><td>방문 위치 검증용 좌표</td><td>35.10, 129.03</td></tr>
+    </table>
+  </div>
+
+  <!-- SKU -->
+  <div class="entity card">
+    <div class="entity-head"><h3>SKU (Product)</h3><span class="en">상품</span></div>
+    <div class="entity-desc">진열·판매 대상 상품. Oracle Retail Data Model의 SKU Item(사이즈·중량·색상 등 옵션 단위 최소 판매단위) 개념을 준용.</div>
+    <span class="rel">1:N OOSAlert</span><span class="rel">N:N Promotion</span>
+    <table class="schema">
+      <tr><th>필드</th><th>타입</th><th>설명</th><th>예시</th></tr>
+      <tr><td class="field">sku_id <span class="tag badge-pk">PK</span></td><td class="type">string</td><td>SKU 고유 ID</td><td>SKU-88213</td></tr>
+      <tr><td class="field">product_name</td><td class="type">string</td><td>상품명</td><td>더미식 장인라면 얼큰한맛</td></tr>
+      <tr><td class="field">category_l / category_m / category_s</td><td class="type">string</td><td>대/중/소 카테고리</td><td>가정간편식(HMR) / 면류 / 봉지라면</td></tr>
+      <tr><td class="field">display_zone</td><td class="type">enum</td><td>기본 진열 매대 구분 (진열 위치, storage와 무관)</td><td>상온 매대(ROOM_TEMP) / 냉장 매대(REFRIGERATED) / 본매대(MAIN_DISPLAY) / 엔드매대(END_DISPLAY)</td></tr>
+      <tr><td class="field">storage</td><td class="type">enum</td><td>보관 방법 (보관 방식, display_zone과 무관)</td><td>상온 / 냉장 / 냉동</td></tr>
+      <tr><td class="field">barcode</td><td class="type">string</td><td>바코드(EAN-13)</td><td>8801234567890</td></tr>
+      <tr><td class="field">unit_price</td><td class="type">number</td><td>표준 판매단가(원)</td><td>6,980</td></tr>
+      <tr><td class="field">unit</td><td class="type">string</td><td>단위</td><td>g / ea / kg</td></tr>
+      <tr><td class="field">standard_facing</td><td class="type">int</td><td>플래노그램 기준 진열 수(페이싱)</td><td>5</td></tr>
+      <tr><td class="field">shelf_life_days</td><td class="type">int</td><td>유통기한(일)</td><td>270</td></tr>
+    </table>
+  </div>
+
+  <!-- VisitRecord -->
+  <div class="entity card">
+    <div class="entity-head"><h3>VisitRecord</h3><span class="en">방문기록</span></div>
+    <div class="entity-desc">판촉사원의 매장 방문 및 촬영 이벤트. Salesforce의 Visit 오브젝트, 특허문헌의 Purchase Events-Visits 구조를 참고.</div>
+    <span class="rel">N:1 Store</span><span class="rel">N:1 Employee</span><span class="rel">1:1 ScoreRecord</span>
+    <table class="schema">
+      <tr><th>필드</th><th>타입</th><th>설명</th><th>예시</th></tr>
+      <tr><td class="field">visit_id <span class="tag badge-pk">PK</span></td><td class="type">string</td><td>방문 고유 ID</td><td>VS-20260703-041</td></tr>
+      <tr><td class="field">store_id <span class="tag badge-fk">FK</span></td><td class="type">string</td><td>대상 점포</td><td>ST-10231</td></tr>
+      <tr><td class="field">employee_id <span class="tag badge-fk">FK</span></td><td class="type">string</td><td>방문 판촉사원/SV</td><td>EMP-3321</td></tr>
+      <tr><td class="field">visit_datetime</td><td class="type">datetime</td><td>방문 일시</td><td>2026-07-03T14:32:00</td></tr>
+      <tr><td class="field">visit_type</td><td class="type">enum</td><td>방문 유형</td><td>정기방문 / 긴급대응 / SV동행</td></tr>
+      <tr><td class="field">photo_urls</td><td class="type">array&lt;string&gt;</td><td>촬영 이미지 URL 목록</td><td>[img1.jpg, img2.jpg]</td></tr>
+      <tr><td class="field">captured_zones</td><td class="type">array&lt;enum&gt;</td><td>촬영 완료된 매대 목록</td><td>[상온 매대, 냉장 매대]</td></tr>
+      <tr><td class="field">duration_minutes</td><td class="type">int</td><td>방문 소요 시간(분)</td><td>18</td></tr>
+      <tr><td class="field">gps_verified</td><td class="type">boolean</td><td>방문 위치 GPS 검증 여부</td><td>true</td></tr>
+    </table>
+  </div>
+
+  <!-- ScoreRecord -->
+  <div class="entity card">
+    <div class="entity-head"><h3>ScoreRecord</h3><span class="en">스코어 결과</span></div>
+    <div class="entity-desc">AI 이미지 분석으로 산출된 방문별 Perfect Store Score. M1 모듈의 산출 결과가 저장되는 테이블. total_score = availability×25% + planogram×25% + price_accuracy×20% + pop×15% + shelf_condition×15%</div>
+    <span class="rel">1:1 VisitRecord</span><span class="rel">N:1 Store</span>
+    <table class="schema">
+      <tr><th>필드</th><th>타입</th><th>설명</th><th>예시</th></tr>
+      <tr><td class="field">score_id <span class="tag badge-pk">PK</span></td><td class="type">string</td><td>스코어 레코드 ID</td><td>SC-20260703-041</td></tr>
+      <tr><td class="field">visit_id <span class="tag badge-fk">FK</span></td><td class="type">string</td><td>연결된 방문</td><td>VS-20260703-041</td></tr>
+      <tr><td class="field">availability_score</td><td class="type">int (0-100)</td><td>재고가용성 점수 (가중치 25%)</td><td>72</td></tr>
+      <tr><td class="field">planogram_score</td><td class="type">int (0-100)</td><td>플래노그램 준수 점수 · Facing 기준 (가중치 25%)</td><td>95</td></tr>
+      <tr><td class="field">price_accuracy_score</td><td class="type">int (0-100)</td><td>가격 정합성 점수 (가중치 20%)</td><td>80</td></tr>
+      <tr><td class="field">pop_score</td><td class="type">int (0-100)</td><td>POP 부착 점수 (가중치 15%)</td><td>100</td></tr>
+      <tr><td class="field">shelf_condition_score</td><td class="type">int (0-100)</td><td>매대 정돈·진열방향·온도 등 (가중치 15%)</td><td>82</td></tr>
+      <tr><td class="field">total_score</td><td class="type">int (0-100)</td><td>가중합산 종합 점수</td><td>85</td></tr>
+      <tr><td class="field">detected_issues</td><td class="type">array&lt;string&gt;</td><td>탐지된 이슈 유형</td><td>[품절, 가격오류]</td></tr>
+    </table>
+  </div>
+
+  <!-- OOSAlert -->
+  <div class="entity card">
+    <div class="entity-head"><h3>OOSAlert</h3><span class="en">품절 알림</span></div>
+    <div class="entity-desc">M2 OOS 관리 모듈의 알림·처리 이력. 탐지부터 완료까지의 상태를 추적.</div>
+    <span class="rel">N:1 Store</span><span class="rel">N:1 SKU</span>
+    <table class="schema">
+      <tr><th>필드</th><th>타입</th><th>설명</th><th>예시</th></tr>
+      <tr><td class="field">alert_id <span class="tag badge-pk">PK</span></td><td class="type">string</td><td>알림 고유 ID</td><td>OOS-88231</td></tr>
+      <tr><td class="field">store_id <span class="tag badge-fk">FK</span></td><td class="type">string</td><td>대상 점포</td><td>ST-10231</td></tr>
+      <tr><td class="field">sku_id <span class="tag badge-fk">FK</span></td><td class="type">string</td><td>품절 SKU</td><td>SKU-88213</td></tr>
+      <tr><td class="field">display_zone</td><td class="type">enum</td><td>탐지된 매대 위치</td><td>본매대 / 냉장 매대 / 상온 매대 / 엔드매대</td></tr>
+      <tr><td class="field">detected_at</td><td class="type">datetime</td><td>탐지 시각</td><td>2026-07-03T09:00:00</td></tr>
+      <tr><td class="field">status</td><td class="type">enum</td><td>처리 상태</td><td>신규 / 확인중 / 완료</td></tr>
+      <tr><td class="field">resolved_at</td><td class="type">datetime (nullable)</td><td>처리 완료 시각</td><td>2026-07-03T11:20:00</td></tr>
+      <tr><td class="field">resolved_by <span class="tag badge-fk">FK</span></td><td class="type">string</td><td>처리 담당자(Employee)</td><td>EMP-3321</td></tr>
+      <tr><td class="field">resolution_photo_url</td><td class="type">string</td><td>조치 완료 인증 사진</td><td>fix_88231.jpg</td></tr>
+    </table>
+  </div>
+
+  <!-- Promotion -->
+  <div class="entity card">
+    <div class="entity-head"><h3>Promotion</h3><span class="en">프로모션</span></div>
+    <div class="entity-desc">M7 ROI 엔진의 기준 데이터. Salesforce의 Promotion / Promotion Product 오브젝트 구조를 참고.</div>
+    <span class="rel">N:N SKU</span>
+    <table class="schema">
+      <tr><th>필드</th><th>타입</th><th>설명</th><th>예시</th></tr>
+      <tr><td class="field">promotion_id <span class="tag badge-pk">PK</span></td><td class="type">string</td><td>프로모션 고유 ID</td><td>PRM-2026Q3-07</td></tr>
+      <tr><td class="field">promotion_name</td><td class="type">string</td><td>프로모션명</td><td>장인라면 여름 시식행사</td></tr>
+      <tr><td class="field">promotion_type</td><td class="type">enum</td><td>유형</td><td>할인 / 2+1 / 시식 / 샘플링</td></tr>
+      <tr><td class="field">target_sku_ids</td><td class="type">array&lt;string&gt;</td><td>대상 SKU 목록</td><td>[SKU-88213]</td></tr>
+      <tr><td class="field">start_date / end_date</td><td class="type">date</td><td>기간</td><td>2026-07-01 ~ 07-14</td></tr>
+      <tr><td class="field">budget_cost</td><td class="type">number</td><td>투입 비용(원)</td><td>12,000,000</td></tr>
+      <tr><td class="field">baseline_sales</td><td class="type">number</td><td>기준선(없었을 경우 예상 매출)</td><td>82,000,000</td></tr>
+      <tr><td class="field">actual_sales</td><td class="type">number</td><td>실측 매출</td><td>122,000,000</td></tr>
+      <tr><td class="field">incremental_profit</td><td class="type">number (산출값)</td><td>증분이익</td><td>40,800,000</td></tr>
+      <tr><td class="field">roi</td><td class="type">number (산출값)</td><td>ROI 배수</td><td>3.4</td></tr>
+    </table>
+  </div>
+
+  <!-- Employee -->
+  <div class="entity card">
+    <div class="entity-head"><h3>Employee</h3><span class="en">판촉사원 / SV</span></div>
+    <div class="entity-desc">M8 인력운영 모듈의 기준 데이터. SPLH·출근·교육 이력을 포함.</div>
+    <span class="rel">N:N Store</span><span class="rel">1:N VisitRecord</span>
+    <table class="schema">
+      <tr><th>필드</th><th>타입</th><th>설명</th><th>예시</th></tr>
+      <tr><td class="field">employee_id <span class="tag badge-pk">PK</span></td><td class="type">string</td><td>직원 고유 ID</td><td>EMP-3321</td></tr>
+      <tr><td class="field">name</td><td class="type">string</td><td>이름(마스킹)</td><td>박〇〇</td></tr>
+      <tr><td class="field">role</td><td class="type">enum</td><td>역할</td><td>판촉사원 / SV / 매니저</td></tr>
+      <tr><td class="field">assigned_store_ids</td><td class="type">array&lt;string&gt;</td><td>담당 점포 목록</td><td>[ST-10231, ST-10245]</td></tr>
+      <tr><td class="field">work_hours_weekly</td><td class="type">number</td><td>주간 근로시간</td><td>40</td></tr>
+      <tr><td class="field">sales_weekly</td><td class="type">number</td><td>주간 담당 매출</td><td>5,200,000</td></tr>
+      <tr><td class="field">splh</td><td class="type">number (산출값)</td><td>시간당 매출(= sales_weekly / work_hours_weekly)</td><td>130,000</td></tr>
+      <tr><td class="field">training_status</td><td class="type">enum</td><td>교육 이수 상태</td><td>이수완료 / 예정 / 미이수</td></tr>
+      <tr><td class="field">attendance_rate</td><td class="type">number (%)</td><td>출근율</td><td>96.5</td></tr>
+    </table>
+  </div>
+
+  <!-- CompetitorSnapshot -->
+  <div class="entity card">
+    <div class="entity-head"><h3>CompetitorSnapshot</h3><span class="en">경쟁사 스냅샷</span></div>
+    <div class="entity-desc">M5 경쟁사 데이터 모듈. 자사 매대 촬영 시 함께 인식된 경쟁사 정보 + 신디케이트 데이터 연동분.</div>
+    <span class="rel">N:1 Store</span><span class="rel">N:1 VisitRecord</span>
+    <table class="schema">
+      <tr><th>필드</th><th>타입</th><th>설명</th><th>예시</th></tr>
+      <tr><td class="field">snapshot_id <span class="tag badge-pk">PK</span></td><td class="type">string</td><td>스냅샷 고유 ID</td><td>CMP-55210</td></tr>
+      <tr><td class="field">store_id <span class="tag badge-fk">FK</span></td><td class="type">string</td><td>대상 점포</td><td>ST-10231</td></tr>
+      <tr><td class="field">visit_id <span class="tag badge-fk">FK</span></td><td class="type">string</td><td>수집된 방문 건</td><td>VS-20260703-041</td></tr>
+      <tr><td class="field">competitor_brand</td><td class="type">string</td><td>경쟁사 브랜드</td><td>경쟁사 A</td></tr>
+      <tr><td class="field">competitor_product_name</td><td class="type">string</td><td>경쟁 제품명(인식된 경우)</td><td>-</td></tr>
+      <tr><td class="field">facing_count</td><td class="type">int</td><td>경쟁사 진열 페이싱 수</td><td>4</td></tr>
+      <tr><td class="field">price</td><td class="type">number</td><td>경쟁사 가격(OCR 인식)</td><td>1,350</td></tr>
+      <tr><td class="field">share_of_shelf</td><td class="type">number (%)</td><td>카테고리 내 경쟁사 매대 점유율</td><td>29</td></tr>
+      <tr><td class="field">data_source</td><td class="type">enum</td><td>수집 경로</td><td>자체촬영 / 신디케이트(Nielsen·Circana)</td></tr>
+    </table>
+  </div>
+
+  <div class="note">
+    참고: 엔티티 구성은 Salesforce Consumer Goods Cloud의 Retail Execution 데이터 모델(Retail Store, Visit, Product, Promotion, Planogram, Retail Visit KPI 등 표준 오브젝트)과 Oracle Retail Data Model(SKU Item, Promotion Entities)의 구조를 참고하여, 하림 판매판촉 운영에 맞게 축약·재구성한 초안입니다. 실제 데이터 정리 시 이 필드 목록을 기준으로 맞추시면 되고, 특히 <b style="color:var(--text-primary)">enum 값(채널/세그먼트/등급 분류 체계)</b>과 <b style="color:var(--text-primary)">ScoreRecord 가중치 항목</b>은 하림 내부 기준에 맞게 조정이 필요합니다.
+  </div>
+</div>
+</body>
+</html>

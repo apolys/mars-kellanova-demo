@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="retail-ai.css">
+<title>MarketPro Platform - 현장 운영 통합 플랫폼</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Malgun Gothic", Arial, sans-serif;
+    background: #f4f3f0;
+  }
+
+  /* ============================================
+     레이아웃: 좌측 사이드바 + 상단 바 + 메인 콘텐츠
+     ============================================ */
+  .app-shell {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ---- 사이드바 ---- */
+  .sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background: #1a1a18;
+    color: #FAEEDA;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .sidebar-brand {
+    padding: 20px 18px 14px;
+    border-bottom: 1px solid #3a3a36;
+  }
+  .sidebar-brand .brand-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #FAEEDA;
+    letter-spacing: 0.2px;
+  }
+  .sidebar-brand .brand-sub {
+    font-size: 11.5px;
+    color: #b8b6ae;
+    margin-top: 3px;
+  }
+  .sidebar-user {
+    padding: 14px 18px;
+    border-bottom: 1px solid #3a3a36;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .sidebar-user .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #FAC775; color: #1a1a18;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; flex-shrink: 0;
+  }
+  .sidebar-user .u-name { font-size: 12.5px; font-weight: 600; color: #FAEEDA; }
+  .sidebar-user .u-role { font-size: 11px; color: #8a887f; margin-top: 1px; }
+
+  .sidebar-nav { padding: 10px 8px; flex: 1; }
+  .nav-group { margin-bottom: 2px; }
+  .nav-group-btn {
+    width: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+    background: none; border: none; text-align: left;
+    color: #d8d6cd; font-size: 13px; font-weight: 500;
+    padding: 10px 10px; border-radius: 10px;
+    cursor: pointer; box-shadow: none;
+  }
+  .nav-group-btn:hover { background: #26261f; color: #FAEEDA; transform: none; }
+  .nav-group-btn .chev { font-size: 10px; color: #8a887f; transition: transform .15s; }
+  .nav-group-btn.expanded .chev { transform: rotate(90deg); }
+  .nav-group-btn.current-top { color: #FAEEDA; }
+
+  .nav-children {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .18s ease;
+    padding-left: 6px;
+  }
+  .nav-children.open { max-height: 900px; }
+  .nav-children .nav-divider {
+    font-size: 10.5px; font-weight: 700; color: #6b6a63;
+    padding: 8px 12px 4px;
+  }
+  .nav-leaf {
+    display: block; width: 100%; text-align: left;
+    background: none; border: none; box-shadow: none;
+    color: #a9a79d; font-size: 12.5px; font-weight: 500;
+    padding: 8px 12px 8px 16px; border-radius: 8px;
+    cursor: pointer; border-left: 2px solid transparent;
+  }
+  .nav-leaf:hover { color: #FAEEDA; background: #26261f; transform: none; }
+  .nav-leaf.active { color: #FAEEDA; background: rgba(250,199,117,0.10); border-left-color: #FAC775; }
+
+  .nav-single {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; background: none; border: none; text-align: left;
+    color: #d8d6cd; font-size: 13px; font-weight: 500;
+    padding: 10px 10px; border-radius: 10px; cursor: pointer; box-shadow: none;
+  }
+  .nav-single:hover { background: #26261f; color: #FAEEDA; transform: none; }
+  .nav-single.active { color: #FAEEDA; background: rgba(250,199,117,0.10); }
+  .nav-single .soon-tag {
+    font-size: 9.5px; font-weight: 700; color: #8a887f;
+    border: 1px solid #3a3a36; border-radius: 999px; padding: 2px 6px;
+  }
+
+  .sidebar-toggle {
+    display: none;
+    position: fixed; top: 14px; left: 14px; z-index: 20;
+    background: #1a1a18; color: #FAEEDA; border: none;
+    width: 38px; height: 38px; border-radius: 10px; font-size: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+
+  @media (max-width: 860px){
+    .sidebar {
+      position: fixed; left: 0; top: 0; z-index: 15;
+      transform: translateX(-100%);
+      transition: transform .2s ease;
+      width: 250px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-toggle { display: block; }
+  }
+
+  /* ---- 메인 영역 ---- */
+  .main-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .topbar {
+    background: #fff; border-bottom: 1px solid #eeece7;
+    padding: 12px 24px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar .crumb { font-size: 13px; color: #6b6a63; }
+  .topbar .crumb strong { color: #1F2937; }
+
+  main { max-width: 1200px; width: 100%; margin: 24px auto; padding: 0 20px 40px; }
+  .frame-wrap {
+    background: #ffffff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    overflow: hidden; min-height: 78vh;
+  }
+  #page-container { min-height: 78vh; background: #fff; }
+
+  .error-box { padding: 60px 20px; text-align: center; color: #8a453f; }
+  .error-box code { background: #f4f3f0; padding: 2px 8px; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="메뉴 열기/닫기">☰</button>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-name">MarketPro Platform</div>
+      <div class="brand-sub">현장 운영 통합 플랫폼</div>
+    </div>
+    <div class="sidebar-user">
+      <div class="avatar">홍</div>
+      <div>
+        <div class="u-name">홍길동님</div>
+        <div class="u-role">하림 판촉사원</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav"></nav>
+  </aside>
+
+  <div class="main-col">
+    <div class="topbar">
+      <div class="crumb">MarketPro Platform / <strong id="crumbLabel">Education Center</strong></div>
+    </div>
+
+    <main>
+      <div class="frame-wrap">
+        <div id="page-container">
+          <div style="padding:40px;text-align:center;color:#666">메뉴를 선택하세요.</div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  // ============================================
+  // 메뉴 구성: 최상위 7개 (Dashboard/Workforce/Contract/
+  // Education Center/AI Vision/Analytics/Settings)
+  // Education Center, AI Vision 은 서브메뉴(children)를 가진 그룹
+  // 나머지는 Preview(Coming Soon) 단일 페이지
+  // ============================================
+  const menu = [
+    { id: "dashboard", label: "Dashboard", type: "single", file: "platform_dashboard.html", preview: false },
+    { id: "workforce", label: "Workforce", type: "single", file: "preview_workforce.html", preview: true },
+    { id: "contract", label: "Contract", type: "single", file: "preview_contract.html", preview: true },
+    {
+      id: "education", label: "Education Center", type: "group", defaultOpen: true,
+      children: [
+        { id: "edu-dashboard", label: "교육 대시보드", file: "edu_dashboard.html" },
+        { id: "edu-course-list", label: "교육과정 목록", file: "edu_course_list.html" },
+        { id: "edu-course-detail", label: "교육과정 상세", file: "edu_course_detail.html" },
+        { id: "edu-video", label: "영상 학습", file: "edu_video_learning.html" },
+        { id: "edu-materials", label: "학습자료", file: "edu_materials.html" },
+        { id: "edu-quiz", label: "퀴즈", file: "edu_quiz.html" },
+        { id: "edu-result", label: "결과", file: "edu_result.html" },
+        { id: "edu-certificate", label: "수료증", file: "edu_certificate.html" },
+        { id: "edu-my-learning", label: "나의 학습", file: "edu_my_learning.html" },
+        { id: "edu-notice", label: "공지사항", file: "edu_notice.html" },
+      ]
+    },
+    {
+      id: "aivision", label: "AI Vision", type: "group",
+      children: [
+        { id: "arch", label: "시스템 아키텍처", file: "system_architecture.html", group: "결과" },
+        { id: "data", label: "데이터 레이어", file: "data_layer_schema.html", group: "결과" },
+        { id: "m3", label: "M3. 통합 대시보드", file: "m3_integrated_dashboard.html", group: "결과" },
+        { id: "m1", label: "M1. AI 매대 스코어링", file: "m1_ai_shelf_scoring_mobile.html", group: "결과" },
+        { id: "m2", label: "M2. OOS 관리", file: "m2_oos_alert_list_mobile.html", group: "결과" },
+        { id: "m4", label: "M4. 이미지 캡처", file: "m4_ar_capture_guide.html", group: "결과" },
+        { id: "ai-detail", label: "AI 분석 상세 결과", file: "ai_analysis_detail.html", group: "AI 분석" },
+        { id: "ai-report", label: "AI Summary Report", file: "ai_summary_report.html", group: "AI 분석" },
+        { id: "m5", label: "M5. 경쟁사 데이터", file: "m5_competitor_comparison.html", group: "결과" },
+        { id: "m6", label: "M6. 고객접점 연계", file: "m6_customer_recommendation_nudge.html", group: "결과" },
+        { id: "m7", label: "M7. ROI 엔진", file: "m7_roi_engine_ranking.html", group: "결과" },
+        { id: "m8", label: "M8. SPLH 인력운영", file: "m8_splh_workforce_scheduling.html", group: "결과" },
+        { id: "exec", label: "경영진 대시보드", file: "executive_dashboard_mockup.html", group: "결과" },
+        { id: "wflow", label: "근무자 입력 프로세스", file: "w_worker_flow.html", group: "입력" },
+        { id: "mission-admin", label: "관리자 미션 배정", file: "a_mission_assignment.html", group: "입력" },
+        { id: "mission-results", label: "오늘 미션 결과", file: "a_mission_results.html", group: "입력" },
+        { id: "visit-board", label: "오늘 방문 현황판", file: "a_visit_status_board.html", group: "입력" },
+      ]
+    },
+    { id: "analytics", label: "Analytics", type: "single", file: "preview_analytics.html", preview: true },
+    { id: "settings", label: "Settings", type: "single", file: "preview_settings.html", preview: true },
+  ];
+
+  const sidebarNav = document.getElementById("sidebarNav");
+  const container = document.getElementById("page-container");
+  const crumbLabel = document.getElementById("crumbLabel");
+  const sidebar = document.getElementById("sidebar");
+  const sidebarToggle = document.getElementById("sidebarToggle");
+
+  sidebarToggle.addEventListener("click", () => sidebar.classList.toggle("open"));
+
+  function closeMobileSidebar(){ sidebar.classList.remove("open"); }
+
+  function clearActive(){
+    document.querySelectorAll(".nav-leaf.active, .nav-single.active").forEach(el => el.classList.remove("active"));
+  }
+
+  async function loadFile(file, label, activeEl, topLabel){
+    clearActive();
+    if (activeEl) activeEl.classList.add("active");
+    crumbLabel.textContent = topLabel ? (topLabel + " · " + label) : label;
+    document.querySelector(".error-box")?.remove();
+
+    let html;
+    try {
+      html = await fetch("pages/" + file).then(r => {
+        if (!r.ok) throw new Error("not found");
+        return r.text();
+      });
+    } catch (e) {
+      showError(file);
+      return;
+    }
+
+    container.innerHTML = html;
+
+    container.querySelectorAll("script").forEach(oldScript => {
+      const script = document.createElement("script");
+      if (oldScript.src) { script.src = oldScript.src; }
+      else { script.textContent = oldScript.textContent; }
+      document.body.appendChild(script);
+      oldScript.remove();
+    });
+
+    container.querySelectorAll("[data-page]").forEach(el => {
+      el.style.cursor = "pointer";
+      el.addEventListener("click", () => {
+        window.navigate(el.dataset.page, el.dataset.subtab);
+      });
+    });
+
+    closeMobileSidebar();
+  }
+
+  function showError(file){
+    document.querySelector(".error-box")?.remove();
+    const err = document.createElement("div");
+    err.className = "error-box";
+    err.innerHTML = `파일을 찾을 수 없습니다: <code>${file}</code><br><br>
+      index.html과 같은 폴더의 pages/ 안에 해당 파일이 있는지 확인해주세요.`;
+    document.querySelector(".frame-wrap").appendChild(err);
+  }
+
+  // 전역 navigate: 페이지 내부에서 data-page 로 다른 메뉴로 이동할 때 사용
+  window.navigate = function(id, subtab){
+    for (const top of menu) {
+      if (top.type === "group") {
+        const child = top.children.find(c => c.id === id);
+        if (child) {
+          const groupBtn = document.querySelector(`.nav-group-btn[data-id="${top.id}"]`);
+          const childrenWrap = document.getElementById("children-" + top.id);
+          if (groupBtn && childrenWrap) {
+            groupBtn.classList.add("expanded");
+            childrenWrap.classList.add("open");
+          }
+          const leafEl = document.querySelector(`.nav-leaf[data-id="${child.id}"]`);
+          loadFile(child.file, child.label, leafEl, top.label);
+          return;
+        }
+      } else if (top.id === id) {
+        const singleEl = document.querySelector(`.nav-single[data-id="${top.id}"]`);
+        loadFile(top.file, top.label, singleEl, null);
+        return;
+      }
+    }
+    console.warn("페이지 없음:", id);
+  };
+
+  // 사이드바 렌더링
+  let firstLeaf = null;
+  menu.forEach(top => {
+    if (top.type === "single") {
+      const wrap = document.createElement("div");
+      wrap.className = "nav-group";
+      const btn = document.createElement("button");
+      btn.className = "nav-single";
+      btn.dataset.id = top.id;
+      btn.innerHTML = top.preview
+        ? `<span>${top.label}</span><span class="soon-tag">Preview</span>`
+        : `<span>${top.label}</span>`;
+      btn.onclick = () => loadFile(top.file, top.label, btn, null);
+      wrap.appendChild(btn);
+      sidebarNav.appendChild(wrap);
+    } else {
+      const wrap = document.createElement("div");
+      wrap.className = "nav-group";
+
+      const btn = document.createElement("button");
+      btn.className = "nav-group-btn";
+      btn.dataset.id = top.id;
+      btn.innerHTML = `<span>${top.label}</span><span class="chev">▶</span>`;
+
+      const childrenWrap = document.createElement("div");
+      childrenWrap.className = "nav-children";
+      childrenWrap.id = "children-" + top.id;
+
+      if (top.defaultOpen) {
+        btn.classList.add("expanded");
+        childrenWrap.classList.add("open");
+      }
+
+      btn.onclick = () => {
+        btn.classList.toggle("expanded");
+        childrenWrap.classList.toggle("open");
+      };
+
+      let lastGroup = null;
+      top.children.forEach(child => {
+        if (child.group && child.group !== lastGroup) {
+          const divider = document.createElement("div");
+          divider.className = "nav-divider";
+          divider.textContent = child.group;
+          childrenWrap.appendChild(divider);
+          lastGroup = child.group;
+        }
+        const leaf = document.createElement("button");
+        leaf.className = "nav-leaf";
+        leaf.dataset.id = child.id;
+        leaf.textContent = child.label;
+        leaf.onclick = () => loadFile(child.file, child.label, leaf, top.label);
+        childrenWrap.appendChild(leaf);
+
+        if (top.id === "education" && !firstLeaf) {
+          firstLeaf = { el: leaf, child, top };
+        }
+      });
+
+      wrap.appendChild(btn);
+      wrap.appendChild(childrenWrap);
+      sidebarNav.appendChild(wrap);
+    }
+  });
+
+  // 기본 진입 화면: Platform Home Dashboard
+  const defaultSingleBtn = document.querySelector('.nav-single[data-id="dashboard"]');
+  const defaultMenuItem = menu.find(m => m.id === "dashboard");
+  if (defaultSingleBtn && defaultMenuItem) {
+    loadFile(defaultMenuItem.file, defaultMenuItem.label, defaultSingleBtn, null);
+  } else if (firstLeaf) {
+    loadFile(firstLeaf.child.file, firstLeaf.child.label, firstLeaf.el, firstLeaf.top.label);
+  }
+</script>
+
+</body>
+</html>

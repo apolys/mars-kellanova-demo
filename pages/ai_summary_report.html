@@ -1,0 +1,99 @@
+<link rel="stylesheet" href="../retail-ai.css">
+<style>
+  .ar-wrap{max-width:420px;margin:0 auto;padding:8px 0 32px}
+  .ar-card{background:var(--surface-1);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);padding:24px}
+  .ar-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  .ar-head .title{font-size:15px;font-weight:800}
+  .ar-head .badge{font-size:11px;font-weight:700;color:var(--text-accent);background:var(--bg-accent);padding:4px 10px;border-radius:999px}
+
+  .ar-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);font-size:13px}
+  .ar-row:last-of-type{border-bottom:none}
+  .ar-row .k{color:var(--text-secondary)}
+  .ar-row .v{font-weight:700}
+  .ar-row .v.score{font-size:22px;color:var(--text-accent)}
+
+  .ar-reco{margin-top:16px;padding:16px 18px;background:var(--surface-2);border-radius:var(--radius)}
+  .ar-reco h5{font-size:12.5px;font-weight:700;color:var(--text-secondary);margin-bottom:10px}
+  .ar-reco ul{margin:0;padding-left:18px;font-size:13px;line-height:1.9;color:var(--text-primary)}
+
+  .ar-footer{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);font-size:12.5px;color:var(--text-secondary)}
+  .ar-footer .name{font-weight:700;color:var(--text-primary)}
+
+  .ar-actions{display:flex;gap:10px;margin-top:18px}
+  .ar-btn-secondary{flex:1;background:var(--surface-2);color:var(--text-secondary);box-shadow:none}
+  .ar-btn-secondary:hover{background:var(--surface-3);transform:none}
+  .ar-btn-primary{flex:1}
+</style>
+
+<h2 class="screen-caption">AI Summary Report — 촬영 1장에 대한 AI 분석이 끝나면 자동 생성되는 최종 요약 카드. "사진 분석 → 실제 업무 지시"까지 이어지는 흐름을 한 화면으로 보여줍니다.</h2>
+
+<div class="ar-wrap">
+  <div class="ar-card">
+    <div class="ar-head">
+      <div class="title">AI Summary</div>
+      <div class="badge" id="ar-zone-badge">상온 매대</div>
+    </div>
+
+    <div class="ar-row"><span class="k">매장</span><span class="v" id="ar-store">롯데마트 의왕점</span></div>
+    <div class="ar-row"><span class="k">촬영</span><span class="v" id="ar-time">2026-07-08 10:32</span></div>
+    <div class="ar-row"><span class="k">분석</span><span class="v" id="ar-sku-count">31 SKU</span></div>
+    <div class="ar-row"><span class="k">가격표</span><span class="v" id="ar-price-tag">29 / 31</span></div>
+    <div class="ar-row"><span class="k">Perfect Store</span><span class="v score" id="ar-score">91점</span></div>
+
+    <div class="ar-reco">
+      <h5>AI 권장사항</h5>
+      <ul id="ar-reco-list"></ul>
+    </div>
+
+    <div class="ar-footer">
+      <span>담당자</span>
+      <span class="name" id="ar-manager">홍길동</span>
+    </div>
+
+    <div class="ar-actions">
+      <button class="ar-btn-secondary" onclick="window.navigate('ai-detail')">← 상세 분석 보기</button>
+      <button class="ar-btn-primary" onclick="window.navigate('mission-results')">미션 결과로 이동</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ⚙️ SPA 재방문 시 스크립트 재실행 → 최상단 변수 전부 var 사용
+  // ai_analysis_detail.html의 aiMockAnalysis와 동일한 소스(방문 1건)에서 파생되는 리포트라는 가정의 Mock 데이터.
+  // 실제 연동 시에는 ScoreRecord + OOSAlert + Promotion 추천 로직 결과를 조합해 이 리포트를 자동 생성하면 됩니다.
+  var arReport = {
+    store_name: '롯데마트 의왕점',
+    captured_at: '2026-07-09 10:00',
+    sku_count: 5,
+    price_tag_ok: 5,
+    price_tag_total: 5,
+    perfect_store_score: 90,
+    display_zone: '상온 매대(라면류)',
+    manager_name: '홍길동',
+    recommendations: [
+      '장인라면 담백한맛 Facing 확대 (2→4개 권장)',
+      '장인라면 담백한맛 POP 재부착',
+      '장인라면 맵싸한맛 가격표 재촬영 권장 (인식률 82%)'
+    ]
+  };
+
+  function arRender(){
+    document.getElementById('ar-zone-badge').textContent = arReport.display_zone;
+    document.getElementById('ar-store').textContent = arReport.store_name;
+    document.getElementById('ar-time').textContent = arReport.captured_at;
+    document.getElementById('ar-sku-count').textContent = arReport.sku_count + ' SKU';
+    document.getElementById('ar-price-tag').textContent = arReport.price_tag_ok + ' / ' + arReport.price_tag_total;
+    document.getElementById('ar-score').textContent = arReport.perfect_store_score + '점';
+    document.getElementById('ar-manager').textContent = arReport.manager_name;
+
+    var ul = document.getElementById('ar-reco-list');
+    ul.innerHTML = '';
+    arReport.recommendations.forEach(function(r){
+      var li = document.createElement('li');
+      li.textContent = r;
+      ul.appendChild(li);
+    });
+  }
+
+  arRender();
+</script>

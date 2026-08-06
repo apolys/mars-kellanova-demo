@@ -1,0 +1,82 @@
+<link rel="stylesheet" href="../retail-ai.css">
+<h2 class="screen-caption">M5 경쟁사 데이터 — 자사와 경쟁사 브랜드의 진열 점유율과 가격을 비교하는 화면.</h2>
+<div style="max-width:420px; margin:0 auto;">
+  <div style="font-size:14px; font-weight:500; margin-bottom:12px;">즉석조리식품(HMR) 카테고리 · Share of Shelf</div>
+  <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+    <div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>더미식</span><span>34%</span></div>
+      <div style="background:var(--surface-2); border-radius:6px; height:10px; overflow:hidden;"><div style="width:34%; height:100%; background:#7F77DD;"></div></div>
+    </div>
+    <div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>농심</span><span>29%</span></div>
+      <div style="background:var(--surface-2); border-radius:6px; height:10px; overflow:hidden;"><div style="width:29%; height:100%; background:#888780;"></div></div>
+    </div>
+    <div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>오뚜기</span><span>22%</span></div>
+      <div style="background:var(--surface-2); border-radius:6px; height:10px; overflow:hidden;"><div style="width:22%; height:100%; background:#888780;"></div></div>
+    </div>
+    <div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>기타</span><span>15%</span></div>
+      <div style="background:var(--surface-2); border-radius:6px; height:10px; overflow:hidden;"><div style="width:15%; height:100%; background:#B4B2A9;"></div></div>
+    </div>
+  </div>
+  <div style="font-size:14px; font-weight:500; margin-bottom:8px;">가격 포지셔닝(즉석밥 1개당)</div>
+  <table style="width:100%; font-size:13px; border-collapse:collapse;">
+    <tr style="border-bottom:0.5px solid var(--border);"><td style="padding:8px 4px; color:var(--text-secondary);">더미식</td><td style="padding:8px 4px; text-align:right; font-weight:500;">1,650원</td></tr>
+    <tr style="border-bottom:0.5px solid var(--border);"><td style="padding:8px 4px; color:var(--text-secondary);">농심</td><td style="padding:8px 4px; text-align:right;">1,350원</td></tr>
+    <tr><td style="padding:8px 4px; color:var(--text-secondary);">오뚜기</td><td style="padding:8px 4px; text-align:right;">1,190원</td></tr>
+  </table>
+
+  <div style="font-size:14px; font-weight:500; margin:24px 0 8px;">Face Count 비교 (평균 페이싱 수)</div>
+  <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+    <div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>더미식</span><span>5.2개</span></div>
+      <div style="background:var(--surface-2); border-radius:6px; height:10px; overflow:hidden;"><div style="width:65%; height:100%; background:#7F77DD;"></div></div>
+    </div>
+    <div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>농심</span><span>7.4개</span></div>
+      <div style="background:var(--surface-2); border-radius:6px; height:10px; overflow:hidden;"><div style="width:93%; height:100%; background:#888780;"></div></div>
+    </div>
+    <div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>오뚜기</span><span>4.6개</span></div>
+      <div style="background:var(--surface-2); border-radius:6px; height:10px; overflow:hidden;"><div style="width:58%; height:100%; background:#888780;"></div></div>
+    </div>
+  </div>
+  <div style="font-size:12px; color:var(--text-danger); margin:-12px 0 20px;">더미식 Face 수, 농심 대비 2.2개 부족</div>
+
+  <div style="font-size:14px; font-weight:500; margin-bottom:8px;">POP 노출 비교 (매장 부착률)</div>
+  <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:24px;">
+    <div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>더미식</span><span>42%</span></div>
+      <div style="background:var(--surface-2); border-radius:6px; height:10px; overflow:hidden;"><div style="width:42%; height:100%; background:#7F77DD;"></div></div>
+    </div>
+    <div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>농심</span><span>61%</span></div>
+      <div style="background:var(--surface-2); border-radius:6px; height:10px; overflow:hidden;"><div style="width:61%; height:100%; background:#888780;"></div></div>
+    </div>
+    <div>
+      <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span>오뚜기</span><span>38%</span></div>
+      <div style="background:var(--surface-2); border-radius:6px; height:10px; overflow:hidden;"><div style="width:38%; height:100%; background:#888780;"></div></div>
+    </div>
+  </div>
+
+  <div style="background:var(--surface-2); border-radius:var(--radius); padding:16px; margin-bottom:14px;">
+    <div style="font-size:13px; font-weight:600; margin-bottom:10px;">AI Summary</div>
+    <div style="display:flex; flex-direction:column; gap:6px; font-size:13px;">
+      <div>✓ 더미식은 Shelf Share 34%로 1위</div>
+      <div style="color:var(--text-warning);">⚠ 경쟁사 대비 Face 수 부족</div>
+      <div style="color:var(--text-warning);">⚠ POP 노출 개선 필요</div>
+      <div>✓ 가격 경쟁력은 유지되고 있으며 POP 노출 개선 시 추가 점유율 확보가 가능합니다.</div>
+    </div>
+  </div>
+
+  <div style="background:var(--surface-2); border-radius:var(--radius); padding:16px;">
+    <div style="font-size:13px; font-weight:600; margin-bottom:10px;">Recommended Action</div>
+    <div style="display:flex; flex-direction:column; gap:6px; font-size:13px;">
+      <div>· Face +2 확보</div>
+      <div>· POP 추가</div>
+      <div>· 엔드매대 협의</div>
+      <div>· 경쟁사 행사 대응</div>
+    </div>
+  </div>
+</div>
