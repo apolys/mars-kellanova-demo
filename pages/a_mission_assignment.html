@@ -57,8 +57,7 @@
   <div style="font-size:13px;font-weight:600;margin-bottom:10px;">고객사 프리셋 (선택 시 추천 미션 자동 체크)</div>
   <div class="ma-preset-row">
     <div class="ma-preset selected" onclick="maApplyPreset(this,'mars')">마즈&켈라노바</div>
-    <div class="ma-preset" onclick="maApplyPreset(this,'cj')">CJ</div>
-    <div class="ma-preset" onclick="maApplyPreset(this,'dongwon')">동원</div>
+    <div class="ma-preset" onclick="maApplyPreset(this,'post')">포스트</div>
   </div>
   <div class="ma-preset-hint">프리셋은 시작점일 뿐이며, 매장마다 개별적으로 다시 조정할 수 있습니다.</div>
 
@@ -78,13 +77,12 @@
 
   var maPresets = {
     mars:['oos','pop','competitor'],
-    cj:['promo','checklist'],
-    dongwon:['order','note']
+    post:['promo','checklist']
   };
 
   var maStores = [
     { name:'GS25 홍대점', missions:['oos','competitor','pop'] },
-    { name:'홈플러스 안양점', missions:['promo','order'] },
+    { name:'롯데마트 의왕점', missions:['promo','order'] },
     { name:'이마트 죽전점', missions:['checklist','note'] },
     { name:'CU 삼성점', missions:[] }
   ];

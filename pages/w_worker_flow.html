@@ -46,7 +46,7 @@
 
   .wf-corner-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 8px;border-radius:var(--radius);background:var(--surface-2);cursor:pointer;border:2px solid transparent;font-size:12.5px;font-weight:600;color:var(--text-secondary)}
   .wf-corner-btn.selected{border-color:var(--primary);background:var(--bg-accent);color:var(--text-accent)}
-  .wf-corner-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+  .wf-corner-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
 
   .wf-upload-box{border:2px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;color:var(--text-muted);font-size:13px;margin-bottom:20px;cursor:pointer;transition:.15s}
   .wf-upload-box:hover{border-color:var(--primary);color:var(--text-accent)}
@@ -190,10 +190,9 @@
       <div class="wf-title">매대 촬영 업로드</div>
       <div class="wf-sub">촬영할 매대를 선택하고 사진을 촬영하세요. 촬영 즉시 AI가 촬영 품질을 확인합니다.</div>
       <div class="wf-corner-grid">
-        <div class="wf-corner-btn selected" data-corner="상온 매대" onclick="wfSelectCorner(this)">📦<span>상온 매대</span></div>
-        <div class="wf-corner-btn" data-corner="냉장 매대" onclick="wfSelectCorner(this)">🥶<span>냉장 매대</span></div>
-        <div class="wf-corner-btn" data-corner="본매대" onclick="wfSelectCorner(this)">🏬<span>본매대</span></div>
+        <div class="wf-corner-btn selected" data-corner="본매대" onclick="wfSelectCorner(this)">🏬<span>본매대</span></div>
         <div class="wf-corner-btn" data-corner="엔드매대" onclick="wfSelectCorner(this)">🛒<span>엔드매대</span></div>
+        <div class="wf-corner-btn" data-corner="포스매대" onclick="wfSelectCorner(this)">💳<span>포스매대</span></div>
       </div>
 
       <div class="wf-camera-box" id="wfCameraBox">
@@ -306,7 +305,7 @@
         { key:'pop', label:'POP 확인', icon:'🏷️', done:false }
       ]
     },
-    { name:'홈플러스 안양점', status:'pending', score:null, oos:null,
+    { name:'롯데마트 의왕점', status:'pending', score:null, oos:null,
       missions:[
         { key:'promo', label:'행사현황 조사', icon:'🎪', done:false },
         { key:'order', label:'발주 요청', icon:'📝', done:false }
