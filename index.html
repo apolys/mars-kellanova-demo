@@ -295,7 +295,7 @@
 
     let html;
     try {
-      html = await fetch("pages/" + file).then(r => {
+      html = await fetch("pages/" + file, { cache: "no-store" }).then(r => {
         if (!r.ok) throw new Error("not found");
         return r.text();
       });
