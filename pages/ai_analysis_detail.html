@@ -89,10 +89,10 @@
 
   <div class="ad-header">
     <div>
-      <div class="store" id="ad-store-name">롯데마트 의왕점</div>
+      <div class="store" id="ad-store-name">GS25 강남점</div>
       <div class="meta" id="ad-capture-meta">촬영 2026-07-08 10:32 · 담당 홍길동</div>
     </div>
-    <div class="zone-badge" id="ad-zone-badge">상온 매대</div>
+    <div class="zone-badge" id="ad-zone-badge">스낵 매대</div>
   </div>
 
   <div class="ad-tabbar" id="ad-tabbar"></div>
@@ -174,7 +174,7 @@
   <!-- TAB 2: SKU Detection Detail -->
   <div class="ad-panel" id="ad-panel-sku">
     <div class="ad-card">
-      <h4>SKU Detection Detail <span style="font-weight:400;color:var(--text-muted)">— 검출된 5개 SKU (하림 4종 + 경쟁사 1종)</span></h4>
+      <h4>SKU Detection Detail <span style="font-weight:400;color:var(--text-muted)">— 검출된 5개 SKU (Pringles 4종 + 경쟁사 1종)</span></h4>
       <table class="ad-table">
         <tr><th>SKU</th><th>인식</th><th>Facing</th><th>가격표</th><th>POP</th></tr>
         <tbody id="ad-sku-tbody"></tbody>
@@ -227,9 +227,9 @@
   var aiMockAnalysis = {
     photo: {
       photo_id: 'PH-20260709-0104',
-      store_name: '롯데마트 의왕점',
+      store_name: 'GS25 강남점',
       captured_at: '2026-07-09T10:00:00',
-      display_zone: '상온 매대(라면류)',
+      display_zone: '스낵 매대(Pringles)',
       manager_name: '홍길동'
     },
     metrics: {
@@ -240,24 +240,24 @@
       perfect_store_score: 90
     },
     summary_issues: [
-      { label: '장인라면 담백한맛 POP 미부착', level: 'danger' },
-      { label: '장인라면 담백한맛 Facing 부족(2개, 기준 4개)', level: 'warn' },
-      { label: '장인라면 맵싸한맛 가격표 일부 가림(인식률 82%)', level: 'warn' },
+      { label: 'Pringles 사워크림&어니언 POP 미부착', level: 'danger' },
+      { label: 'Pringles 사워크림&어니언 Facing 부족(2개, 기준 4개)', level: 'warn' },
+      { label: 'Pringles 핫&스파이시 가격표 일부 가림(인식률 82%)', level: 'warn' },
       { label: '재고 완전 품절 SKU 없음', level: 'ok' }
     ],
     sku_detection: [
-      { sku_name: '더미식 장인라면 얼큰한맛', recognized: true, facing: 4, price_tag_ok: true,  pop_ok: true  },
-      { sku_name: '더미식 장인라면 담백한맛', recognized: true, facing: 2, price_tag_ok: true,  pop_ok: false },
-      { sku_name: '더미식 장인라면 맵싸한맛', recognized: true, facing: 4, price_tag_ok: true,  pop_ok: true  },
-      { sku_name: 'The미식 오징어라면',       recognized: true, facing: 4, price_tag_ok: true,  pop_ok: true  },
-      { sku_name: '(경쟁사) 서울라면 로스팅', recognized: true, facing: 2, price_tag_ok: true,  pop_ok: false }
+      { sku_name: 'Pringles 오리지널',        recognized: true, facing: 4, price_tag_ok: true,  pop_ok: true  },
+      { sku_name: 'Pringles 사워크림&어니언',    recognized: true, facing: 2, price_tag_ok: true,  pop_ok: false },
+      { sku_name: 'Pringles 핫&스파이시',        recognized: true, facing: 4, price_tag_ok: true,  pop_ok: true  },
+      { sku_name: 'Pringles 프렌치어니언',       recognized: true, facing: 4, price_tag_ok: true,  pop_ok: true  },
+      { sku_name: '(경쟁사) 포카칩',              recognized: true, facing: 2, price_tag_ok: true,  pop_ok: false }
     ],
     sku_detection_more: 0,
     price_ocr: [
-      { sku_name: '더미식 장인라면 얼큰한맛', ocr_price: '6,600원', confidence: 97, matched: true },
-      { sku_name: '더미식 장인라면 담백한맛', ocr_price: '6,600원', confidence: 95, matched: true },
-      { sku_name: '더미식 장인라면 맵싸한맛', ocr_price: '6,600원', confidence: 82, matched: true },
-      { sku_name: 'The미식 오징어라면',       ocr_price: '7,480원', confidence: 94, matched: true }
+      { sku_name: 'Pringles 오리지널',        ocr_price: '3,480원', confidence: 97, matched: true },
+      { sku_name: 'Pringles 사워크림&어니언',    ocr_price: '3,480원', confidence: 95, matched: true },
+      { sku_name: 'Pringles 핫&스파이시',        ocr_price: '3,480원', confidence: 82, matched: true },
+      { sku_name: 'Pringles 프렌치어니언',       ocr_price: '3,680원', confidence: 94, matched: true }
     ],
     compliance_checklist: [
       { label: '가격표 있음',            passed: true },
@@ -269,9 +269,9 @@
     ],
     overall_compliance_score: 90,
     manager_actions: [
-      { priority: 1, sku: '더미식 장인라면 담백한맛', action: 'Facing 확대 (2→4개 권장)' },
-      { priority: 2, sku: '더미식 장인라면 담백한맛', action: 'POP 재부착' },
-      { priority: 3, sku: '더미식 장인라면 맵싸한맛', action: '가격표 재촬영 권장 (인식률 82%)' }
+      { priority: 1, sku: 'Pringles 사워크림&어니언', action: 'Facing 확대 (2→4개 권장)' },
+      { priority: 2, sku: 'Pringles 사워크림&어니언', action: 'POP 재부착' },
+      { priority: 3, sku: 'Pringles 핫&스파이시', action: '가격표 재촬영 권장 (인식률 82%)' }
     ],
     before_after: {
       perfect_store: { before: 90, after: 97 },
@@ -280,9 +280,9 @@
     },
     score_breakdown: [
       { label: '재고가용성',        weight: 25, obtained: 25.0, basis: '완전 품절 SKU 없음' },
-      { label: '플래노그램 준수',    weight: 25, obtained: 21.0, basis: '담백한맛 Facing 2개 (기준 4개 미달)' },
-      { label: '가격 정합성',        weight: 20, obtained: 19.0, basis: '맵싸한맛 가격표 일부 가림 (인식률 82%)' },
-      { label: 'POP 부착',          weight: 15, obtained: 11.0, basis: '담백한맛 POP 미부착' },
+      { label: '플래노그램 준수',    weight: 25, obtained: 21.0, basis: '사워크림&어니언 Facing 2개 (기준 4개 미달)' },
+      { label: '가격 정합성',        weight: 20, obtained: 19.0, basis: '핫&스파이시 가격표 일부 가림 (인식률 82%)' },
+      { label: 'POP 부착',          weight: 15, obtained: 11.0, basis: '사워크림&어니언 POP 미부착' },
       { label: '매대 정돈·진열방향', weight: 15, obtained: 14.0, basis: '전반적 진열 상태 양호' }
     ]
   };

@@ -31,10 +31,10 @@
   <div class="ar-card">
     <div class="ar-head">
       <div class="title">AI Summary</div>
-      <div class="badge" id="ar-zone-badge">상온 매대</div>
+      <div class="badge" id="ar-zone-badge">스낵 매대</div>
     </div>
 
-    <div class="ar-row"><span class="k">매장</span><span class="v" id="ar-store">롯데마트 의왕점</span></div>
+    <div class="ar-row"><span class="k">매장</span><span class="v" id="ar-store">GS25 강남점</span></div>
     <div class="ar-row"><span class="k">촬영</span><span class="v" id="ar-time">2026-07-08 10:32</span></div>
     <div class="ar-row"><span class="k">분석</span><span class="v" id="ar-sku-count">31 SKU</span></div>
     <div class="ar-row"><span class="k">가격표</span><span class="v" id="ar-price-tag">29 / 31</span></div>
@@ -62,18 +62,18 @@
   // ai_analysis_detail.html의 aiMockAnalysis와 동일한 소스(방문 1건)에서 파생되는 리포트라는 가정의 Mock 데이터.
   // 실제 연동 시에는 ScoreRecord + OOSAlert + Promotion 추천 로직 결과를 조합해 이 리포트를 자동 생성하면 됩니다.
   var arReport = {
-    store_name: '롯데마트 의왕점',
+    store_name: 'GS25 강남점',
     captured_at: '2026-07-09 10:00',
     sku_count: 5,
     price_tag_ok: 5,
     price_tag_total: 5,
     perfect_store_score: 90,
-    display_zone: '상온 매대(라면류)',
+    display_zone: '스낵 매대(Pringles)',
     manager_name: '홍길동',
     recommendations: [
-      '장인라면 담백한맛 Facing 확대 (2→4개 권장)',
-      '장인라면 담백한맛 POP 재부착',
-      '장인라면 맵싸한맛 가격표 재촬영 권장 (인식률 82%)'
+      'Pringles 사워크림&어니언 Facing 확대 (2→4개 권장)',
+      'Pringles 사워크림&어니언 POP 재부착',
+      'Pringles 핫&스파이시 가격표 재촬영 권장 (인식률 82%)'
     ]
   };
 
